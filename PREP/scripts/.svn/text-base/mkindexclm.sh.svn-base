@@ -1,0 +1,64 @@
+#!/bin/ksh
+set -euax
+
+#expname=UGCSuncpl
+#expname=UGCSbench
+#expname=UGCSbench_fix
+expname=$1
+#igau=0
+#igau=1
+igau=$2
+
+#varlist='wnd850'
+#varlist='wnd200'
+#varlist='z500'
+if [ $igau -eq 1 ]; then
+  varlist='TMPsfc TMP2m PRATEsfc ULWRFtoa TMIN TMAX'
+fi
+if [ $igau -eq 0 ]; then
+  varlist='wnd850 wnd200 z500'
+fi
+
+mmlist='01 02 03 04 05 06 07 08 09 10 11 12'
+ddlist='01 15'
+hhlist='00'
+
+#idir=/climate/noscrub/Suranjana.Saha/clim/climatology/$expname
+#idir=/scratch3/NCEPDEV/climate/noscrub/Christopher.Melhauser/clim/climatology/$expname
+idir=$3/climatology/$expname
+#windex=/nwprod/util/exec/grbindex
+#windex=/scratch3/NCEPDEV/nwprod/NWPROD.WCOSS/util/exec/grbindex
+
+for var in $varlist
+do
+
+ for mm in $mmlist
+ do
+
+  for dd in $ddlist
+  do
+
+   for hh in $hhlist
+   do
+
+    if [ $igau -eq 0 ] ; then
+     ifile=$idir/$var/$var.$mm.$dd.${hh}Z.mean.clim.daily.1x1.$expname
+    else
+     ifile=$idir/$var/T126/$var.$mm.$dd.${hh}Z.mean.clim.daily.T126.$expname
+    fi
+
+    if [ -s $ifile ] ;  then
+     ls -l $ifile
+     $windex $ifile $ifile.index
+     ls -l $ifile.index
+    else
+     echo "$ifile not found"
+    fi
+
+   done
+
+  done
+
+ done
+
+done

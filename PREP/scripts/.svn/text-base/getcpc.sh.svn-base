@@ -1,0 +1,237 @@
+#!/bin/ksh
+set -xa
+
+export list=$listvar
+echo "tday is $tday"
+tdate=${tday}00
+
+sdate=`/nwprod/util/exec/ndate -18 $tdate`
+edate=$tdate
+fout=6
+
+nextd=1
+
+dir=/climate/noscrub/Suranjana.Saha/cpcCFSv2Arch/45day6Hrly
+
+NFH00=1098
+NFH=1080
+hpsstar=/nwprod/util/ush/hpsstar
+wgrib2=/nwprod/util/exec/wgrib2
+
+namelist='CAPE180_0mb CPRATsfc DPT30_0mb HGTprs O3MRprs PRATEsfc PRESsfc PRMSLmsl PWATclm SPFH2m SPFHprs TMP2m TMP30_0mb TMPprs UGRDprs UGRDsig995 ULWRFtoa VGRDprs VGRDsig995 wnd10m TMPsfc'
+namstr='6hr.grb2'
+#----------------------------------------------
+CDATE=$sdate
+until [[ $CDATE -gt $edate ]] ; do
+
+ yyyy=`echo $CDATE | cut -c1-4`
+ mm=`echo $CDATE | cut -c5-6`
+ dd=`echo $CDATE | cut -c7-8`
+ hh=`echo $CDATE | cut -c9-10`
+ day=`echo $CDATE | cut -c1-8`
+
+ odir=$dir/${yyyy}/$CDATE
+ mkdir -p $odir
+ for name in $namelist
+ do
+  outfile=$odir/$name.$CDATE.$namstr
+  > $outfile
+ done
+
+ FHI=$NFH
+ if [ $hh = "00" ] ; then
+  FHI=$NFH00
+ fi
+
+ idir=/com/cfs/prod/cfs/cfs.$day/$hh/6hrly_grib_01
+ FH=6
+ until [ $FH -gt $FHI ] ; do
+
+  VDATE=`/nwprod/util/exec/ndate $FH $CDATE`
+  ifile=$idir/pgbf$VDATE.01.$CDATE.grb2
+
+  if [[ -s $ifile ]] ; then
+   ls -l $ifile
+
+    $wgrib2 $ifile -append \
+     -if "CAPE:180-0 mb above ground:$FH" -grib $odir/CAPE180_0mb.$CDATE.$namstr \
+     -if "DPT:30-0 mb above ground:$FH" -grib $odir/DPT30_0mb.$CDATE.$namstr \
+     -if "HGT:1000 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:925 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:900 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:875 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:850 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:825 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:800 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:775 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:750 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:700 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:650 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:600 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:550 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:500 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:450 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:400 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:350 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:300 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:250 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:200 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:100 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:50 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:10 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:5 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "HGT:2 mb:$FH" -grib $odir/HGTprs.$CDATE.$namstr \
+     -if "O3MR:50 mb:$FH" -grib $odir/O3MRprs.$CDATE.$namstr \
+     -if "O3MR:10 mb:$FH" -grib $odir/O3MRprs.$CDATE.$namstr \
+     -if "O3MR:5 mb:$FH" -grib $odir/O3MRprs.$CDATE.$namstr \
+     -if "O3MR:2 mb:$FH" -grib $odir/O3MRprs.$CDATE.$namstr \
+     -if "PRMSL:mean sea level:$FH" -grib $odir/PRMSLmsl.$CDATE.$namstr \
+     -if "SPFH:500 mb:$FH" -grib $odir/SPFHprs.$CDATE.$namstr \
+     -if "SPFH:550 mb:$FH" -grib $odir/SPFHprs.$CDATE.$namstr \
+     -if "SPFH:600 mb:$FH" -grib $odir/SPFHprs.$CDATE.$namstr \
+     -if "SPFH:650 mb:$FH" -grib $odir/SPFHprs.$CDATE.$namstr \
+     -if "SPFH:700 mb:$FH" -grib $odir/SPFHprs.$CDATE.$namstr \
+     -if "SPFH:750 mb:$FH" -grib $odir/SPFHprs.$CDATE.$namstr \
+     -if "SPFH:775 mb:$FH" -grib $odir/SPFHprs.$CDATE.$namstr \
+     -if "SPFH:800 mb:$FH" -grib $odir/SPFHprs.$CDATE.$namstr \
+     -if "SPFH:825 mb:$FH" -grib $odir/SPFHprs.$CDATE.$namstr \
+     -if "SPFH:850 mb:$FH" -grib $odir/SPFHprs.$CDATE.$namstr \
+     -if "SPFH:875 mb:$FH" -grib $odir/SPFHprs.$CDATE.$namstr \
+     -if "SPFH:900 mb:$FH" -grib $odir/SPFHprs.$CDATE.$namstr \
+     -if "SPFH:925 mb:$FH" -grib $odir/SPFHprs.$CDATE.$namstr \
+     -if "SPFH:1000 mb:$FH" -grib $odir/SPFHprs.$CDATE.$namstr \
+     -if "TMP:30-0 mb above ground:$FH" -grib $odir/TMP30_0mb.$CDATE.$namstr \
+     -if "TMP:1000 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:925 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:900 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:875 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:850 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:825 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:800 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:775 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:750 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:700 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:650 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:600 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:550 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:500 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:450 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:400 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:350 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:300 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:250 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:200 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:100 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:50 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:10 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:5 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "TMP:2 mb:$FH" -grib $odir/TMPprs.$CDATE.$namstr \
+     -if "UGRD:1000 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:925 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:900 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:875 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:850 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:825 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:800 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:775 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:750 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:700 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:650 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:600 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:550 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:500 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:450 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:400 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:350 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:300 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:250 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:200 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:100 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:50 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:10 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:5 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:2 mb:$FH" -grib $odir/UGRDprs.$CDATE.$namstr \
+     -if "UGRD:0.995 sigma level:$FH" -grib $odir/UGRDsig995.$CDATE.$namstr \
+     -if "VGRD:1000 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:925 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:900 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:875 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:850 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:825 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:800 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:775 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:750 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:700 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:650 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:600 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:550 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:500 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:450 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:400 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:350 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:300 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:250 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:200 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:100 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:50 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:10 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:5 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:2 mb:$FH" -grib $odir/VGRDprs.$CDATE.$namstr \
+     -if "VGRD:0.995 sigma level:$FH" -grib $odir/VGRDsig995.$CDATE.$namstr  > /dev/null
+
+   else
+
+    echo "$ifile not found"
+    exit 8
+   fi
+
+  ifile=$idir/flxf$VDATE.01.$CDATE.grb2
+
+  if [[ -s $ifile ]] ; then
+   ls -l $ifile
+
+    $wgrib2 $ifile -append \
+     -if "CPRAT:surface:$FH" -grib $odir/CPRATsfc.$CDATE.$namstr \
+     -if "PRATE:surface:$FH" -grib $odir/PRATEsfc.$CDATE.$namstr \
+     -if "PRES:surface:$FH" -grib $odir/PRESsfc.$CDATE.$namstr \
+     -if "SPFH:2 m above ground:$FH" -grib $odir/SPFH2m.$CDATE.$namstr \
+     -if "TMP:2 m above ground:$FH" -grib $odir/TMP2m.$CDATE.$namstr \
+     -if "TMP:surface:$FH" -grib $odir/TMPsfc.$CDATE.$namstr \
+     -if "ULWRF:top of atmosphere:$FH" -grib $odir/ULWRFtoa.$CDATE.$namstr \
+     -if "UGRD:10 m above ground:$FH" -grib $odir/wnd10m.$CDATE.$namstr \
+     -if "VGRD:10 m above ground:$FH" -grib $odir/wnd10m.$CDATE.$namstr \
+     -if "PWAT" -grib $odir/PWATclm.$CDATE.$namstr > /dev/null
+
+   else
+
+    echo "$ifile not found"
+    exit 8
+   fi
+
+## end FH-loop
+  FH=`expr $FH \+ 6`
+  done
+
+   ls -l $odir/*
+
+echo "I AM DONE for $CDATE"
+CDATE=`/nwprod/util/exec/ndate $fout $CDATE`
+done
+#-------------------------------------------------------------
+###################################################################
+##  submit job for next day
+### remember time is GMT ### 9AM local time (EST) is 2PM GMT (1400 hrs)
+###################################################################
+if [[ $nextd -eq 1 ]] ; then
+ export vdate=${tday}13
+ export subdate=`/nwprod/util/exec/ndate 24 $vdate`
+ export tday=`echo $subdate | cut -c1-8`
+ export listvar=tday,listvar
+ outfile=$SCRIPTS/getcpc.out
+ orgfile=$SCRIPTS/getcpc.org
+ > $orgfile
+ /bin/cp $outfile $orgfile
+ > $outfile
+  $subx -a GFS-T2O -e $listvar -q dev_shared -p 1/1/S -t 3:00 -w $subdate -o $outfile $SCRIPTS/getcpc.sh
+fi
+

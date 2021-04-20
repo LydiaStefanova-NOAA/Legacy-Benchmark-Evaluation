@@ -1,0 +1,4 @@
+set -x
+ifort -convert big_endian -c miscng.f
+ifort -recursive -openmp -convert big_endian $1.f \
+-L/nwprod/lib -lsp_4 -lip_4 -lw3nco_4 -lw3emc_4 -lbacio_4 -lbufr_4_64 miscng.o -o $1.x

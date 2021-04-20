@@ -1,0 +1,2 @@
+If you make any change, run "make" to compile in sorc directory
+Executable goes to edir (PREP/exec)

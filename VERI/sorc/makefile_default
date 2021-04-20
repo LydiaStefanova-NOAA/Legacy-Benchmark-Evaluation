@@ -1,0 +1,132 @@
+SHELL=  /bin/sh
+FC=     ifort
+FFLAGS= -recursive -qopenmp -convert big_endian
+LIBS=   -L/gpfs/dell1/nco/ops/nwprod/lib ${SP_LIB4} ${IP_LIB4} ${W3NCO_LIB4} ${W3EMC_LIB4} ${BACIO_LIB4} ${BUFR_LIB4}
+
+ALL : readgau.x readgaudjf.x readgaumam.x readgaujja.x readgauson.x readgaut.x readgautdjf.x readgautmam.x readgautjja.x readgautson.x readgaup.x readgaupdjf.x readgaupmam.x readgaupjja.x readgaupson.x read1x1.x read1x1djf.x read1x1mam.x read1x1jja.x read1x1son.x readocn.x readpot.x readsst.x readsstdjf.x readsstmam.x readsstjja.x readsstson.x
+.PHONY: ALL
+
+readgau.x     : readgau.o miscng.o
+	$(FC) $(FFLAGS) readgau.o miscng.o -o ../exec/$(@) $(LIBS)
+readgaudjf.x     : readgaudjf.o miscng.o
+	$(FC) $(FFLAGS) readgaudjf.o miscng.o -o ../exec/$(@) $(LIBS)
+readgaumam.x     : readgaumam.o miscng.o
+	$(FC) $(FFLAGS) readgaumam.o miscng.o -o ../exec/$(@) $(LIBS)
+readgaujja.x     : readgaujja.o miscng.o
+	$(FC) $(FFLAGS) readgaujja.o miscng.o -o ../exec/$(@) $(LIBS)
+readgauson.x     : readgauson.o miscng.o
+	$(FC) $(FFLAGS) readgauson.o miscng.o -o ../exec/$(@) $(LIBS)
+
+readgaut.x    : readgaut.o miscng.o
+	$(FC) $(FFLAGS) readgaut.o miscng.o -o ../exec/$(@) $(LIBS)
+readgautdjf.x    : readgautdjf.o miscng.o
+	$(FC) $(FFLAGS) readgautdjf.o miscng.o -o ../exec/$(@) $(LIBS)
+readgautmam.x    : readgautmam.o miscng.o
+	$(FC) $(FFLAGS) readgautmam.o miscng.o -o ../exec/$(@) $(LIBS)
+readgautjja.x    : readgautjja.o miscng.o
+	$(FC) $(FFLAGS) readgautjja.o miscng.o -o ../exec/$(@) $(LIBS)
+readgautson.x    : readgautson.o miscng.o
+	$(FC) $(FFLAGS) readgautson.o miscng.o -o ../exec/$(@) $(LIBS)
+
+readgaup.x    : readgaup.o miscng.o
+	$(FC) $(FFLAGS) readgaup.o miscng.o -o ../exec/$(@) $(LIBS)
+readgaupdjf.x    : readgaupdjf.o miscng.o
+	$(FC) $(FFLAGS) readgaupdjf.o miscng.o -o ../exec/$(@) $(LIBS)
+readgaupmam.x    : readgaupmam.o miscng.o
+	$(FC) $(FFLAGS) readgaupmam.o miscng.o -o ../exec/$(@) $(LIBS)
+readgaupjja.x    : readgaupjja.o miscng.o
+	$(FC) $(FFLAGS) readgaupjja.o miscng.o -o ../exec/$(@) $(LIBS)
+readgaupson.x    : readgaupson.o miscng.o
+	$(FC) $(FFLAGS) readgaupson.o miscng.o -o ../exec/$(@) $(LIBS)
+
+read1x1.x     : read1x1.o miscng.o
+	$(FC) $(FFLAGS) read1x1.o miscng.o -o ../exec/$(@) $(LIBS)
+read1x1djf.x     : read1x1djf.o miscng.o
+	$(FC) $(FFLAGS) read1x1djf.o miscng.o -o ../exec/$(@) $(LIBS)
+read1x1mam.x     : read1x1mam.o miscng.o
+	$(FC) $(FFLAGS) read1x1mam.o miscng.o -o ../exec/$(@) $(LIBS)
+read1x1jja.x     : read1x1jja.o miscng.o
+	$(FC) $(FFLAGS) read1x1jja.o miscng.o -o ../exec/$(@) $(LIBS)
+read1x1son.x     : read1x1son.o miscng.o
+	$(FC) $(FFLAGS) read1x1son.o miscng.o -o ../exec/$(@) $(LIBS)
+
+readsst.x     : readsst.o miscng.o
+	$(FC) $(FFLAGS) readsst.o miscng.o -o ../exec/$(@) $(LIBS)
+readsstdjf.x     : readsstdjf.o miscng.o
+	$(FC) $(FFLAGS) readsstdjf.o miscng.o -o ../exec/$(@) $(LIBS)
+readsstmam.x     : readsstmam.o miscng.o
+	$(FC) $(FFLAGS) readsstmam.o miscng.o -o ../exec/$(@) $(LIBS)
+readsstjja.x     : readsstjja.o miscng.o
+	$(FC) $(FFLAGS) readsstjja.o miscng.o -o ../exec/$(@) $(LIBS)
+readsstson.x     : readsstson.o miscng.o
+	$(FC) $(FFLAGS) readsstson.o miscng.o -o ../exec/$(@) $(LIBS)
+
+readocn.x     : readocn.o miscng.o
+	$(FC) $(FFLAGS) readocn.o miscng.o -o ../exec/$(@) $(LIBS)
+readpot.x     : readpot.o miscng.o
+	$(FC) $(FFLAGS) readpot.o miscng.o -o ../exec/$(@) $(LIBS)
+
+readgau.o     : readgau.f
+	$(FC) $(FFLAGS) -c readgau.f
+readgaudjf.o    : readgaudjf.f
+	$(FC) $(FFLAGS) -c readgaudjf.f
+readgaumam.o    : readgaumam.f
+	$(FC) $(FFLAGS) -c readgaumam.f
+readgaujja.o    : readgaujja.f
+	$(FC) $(FFLAGS) -c readgaujja.f
+readgauson.o    : readgauson.f
+	$(FC) $(FFLAGS) -c readgauson.f
+
+readgaut.o    : readgaut.f
+	$(FC) $(FFLAGS) -c readgaut.f
+readgautdjf.o    : readgautdjf.f
+	$(FC) $(FFLAGS) -c readgautdjf.f
+readgautmam.o    : readgautmam.f
+	$(FC) $(FFLAGS) -c readgautmam.f
+readgautjja.o    : readgautjja.f
+	$(FC) $(FFLAGS) -c readgautjja.f
+readgautson.o    : readgautson.f
+	$(FC) $(FFLAGS) -c readgautson.f
+
+readgaup.o    : readgaup.f
+	$(FC) $(FFLAGS) -c readgaup.f
+readgaupdjf.o    : readgaupdjf.f
+	$(FC) $(FFLAGS) -c readgaupdjf.f
+readgaupmam.o    : readgaupmam.f
+	$(FC) $(FFLAGS) -c readgaupmam.f
+readgaupjja.o    : readgaupjja.f
+	$(FC) $(FFLAGS) -c readgaupjja.f
+readgaupson.o    : readgaupson.f
+	$(FC) $(FFLAGS) -c readgaupson.f
+
+read1x1.o      : read1x1.f
+	$(FC) $(FFLAGS) -c read1x1.f
+read1x1djf.o      : read1x1djf.f
+	$(FC) $(FFLAGS) -c read1x1djf.f
+read1x1mam.o      : read1x1mam.f
+	$(FC) $(FFLAGS) -c read1x1mam.f
+read1x1jja.o      : read1x1jja.f
+	$(FC) $(FFLAGS) -c read1x1jja.f
+read1x1son.o      : read1x1son.f
+	$(FC) $(FFLAGS) -c read1x1son.f
+
+readsst.o      : readsst.f
+	$(FC) $(FFLAGS) -c readsst.f
+readsstdjf.o      : readsstdjf.f
+	$(FC) $(FFLAGS) -c readsstdjf.f
+readsstmam.o      : readsstmam.f
+	$(FC) $(FFLAGS) -c readsstmam.f
+readsstjja.o      : readsstjja.f
+	$(FC) $(FFLAGS) -c readsstjja.f
+readsstson.o      : readsstson.f
+	$(FC) $(FFLAGS) -c readsstson.f
+
+readocn.o      : readocn.f
+	$(FC) $(FFLAGS) -c readocn.f
+readpot.o      : readpot.f
+	$(FC) $(FFLAGS) -c readpot.f
+miscng.o        : miscng.f
+	$(FC) $(FFLAGS) -c miscng.f
+
+clean  :
+	rm *.o ../exec/*.x

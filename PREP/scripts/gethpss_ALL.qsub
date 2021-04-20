@@ -1,0 +1,67 @@
+#!/bin/ksh
+#set -eax
+
+export expname=UFSv1
+export tmpdir=/gpfs/dell2/ptmp/Tracey.Dorian/$expname
+mkdir -p $tmpdir
+export hpssd=/5year/NCEPDEV/emc-marine/Bin.Li/THEIA/benchmark1/c384
+
+#SCRIPTS=/climate/save/emc.climpara/Suru/validation/ufsv1
+SCRIPTS=/gpfs/dell2/emc/verification/noscrub/Tracey.Dorian/save/S2S_validation/ufsv1
+#subx=/gpfs/td1/emc/global/save/Suranjana.Saha/amip/scripts/sub_wcoss
+subx=/gpfs/dell2/emc/modeling/noscrub/Shrinivas.Moorthi/para/bin/sub_wcoss_d
+#subx=$SCRIPTS/sub_wcoss
+
+#yyyyst=2011
+#yyyyet=2018
+#mmst=4
+#mmet=3
+
+#yyyyst=2013
+#yyyyet=2013
+#mmst=1
+#mmet=6
+
+yyyyst=2018
+yyyyet=2018
+mmst=3
+mmet=3
+
+#export ddlist='01 15'
+export ddlist='15'
+export hh=00
+
+export pgb=1
+export flx=1
+export ocn=1
+
+yyyy=$yyyyst
+until [ $yyyy -gt $yyyyet ] ; do
+
+ export yyyy
+ mms=1
+ mme=12
+ if [ $yyyy -eq $yyyyst ] ; then
+  mms=$mmst
+ fi
+ if [ $yyyy -eq $yyyyet ] ; then
+  mme=$mmet
+ fi
+
+ mm=$mms
+ until [ $mm -gt $mme ] ; do
+  if [ $mm -le 9 ] ; then
+   mm=0$mm
+  fi
+  export mm
+
+   export listvar=expname,hpssd,tmpdir,yyyy,mm,ddlist,hh,pgb,flx,ocn,listvar
+   outfile=$SCRIPTS/prout/gethpss.${yyyy}$mm.out
+   > $outfile
+   $subx -a CFS-T2O -e $listvar -q dev_transfer -p 1/1/S -t 6:00 -o $outfile $SCRIPTS/gethpss_ALL.sh
+
+ mm=`expr $mm + 1`
+ done
+
+yyyy=`expr $yyyy + 1`
+done

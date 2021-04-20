@@ -1,0 +1,2 @@
+          print *,'icase= ',icases,' iyr= ',iyr,' imth= ',imth,
+     *            ' iday= ',iday

@@ -1,0 +1,45 @@
+#!/bin/ksh
+
+sdate=2011040100
+edate=2017033100
+fout=24
+
+expname=UGCSuncpl
+idir=/ensemble/noscrub/Christopher.Melhauser/UGCS/UGCS.benchmark_uncpl.T574
+
+#expname=UGCSbench
+#idir=/ensemble/noscrub/Christopher.Melhauser/UGCS/UGCS.benchmark.T574
+
+
+varlist='PRATEsfc ULWRFtoa'
+
+windex=/nwprod/util/exec/grbindex
+wgrib=/nwprod/util/exec/wgrib
+
+for var in $varlist
+do 
+
+ idir=/climate/noscrub/Suranjana.Saha/clim/$expname/$var/T574
+ cd $idir
+
+ CDATE=$sdate
+
+ until [[ $CDATE -gt $edate ]] ; do
+ 
+  yyyy=`echo $CDATE | cut -c1-4`
+  mm=`echo $CDATE | cut -c5-6`
+  dd=`echo $CDATE | cut -c7-8`
+
+  if [ $dd = "01" -o $dd = "15" ] ; then
+
+   ifile=$idir/$var.$expname.T574.${yyyy}${mm}$dd.grib
+   ls -l $ifile
+   $windex $ifile $ifile.index
+   ls -l $ifile.index
+
+  fi
+
+ CDATE=`/nwprod/util/exec/ndate $fout $CDATE`
+ done
+
+done

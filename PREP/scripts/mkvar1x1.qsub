@@ -1,0 +1,27 @@
+#!/bin/ksh
+#set -eax
+
+export sdate=2014010100
+export edate=2018031500
+#export sdate=2018031500
+#export edate=2018031500
+
+
+export expname=UFSv1
+export hgrid=C384
+export tmpdir=/gpfs/td1/ptmp/Tracey.Dorian/$expname/pgb # Tide
+#export tmpdir=/gpfs/dell2/ptmp/Tracey.Dorian/$expname/pgb  # Mars
+#export outdir=/global/noscrub/Tracey.Dorian/validation/$expname
+export outdir=/gpfs/dell2/emc/verification/noscrub/Tracey.Dorian/validation/$expname
+mkdir -p $outdir
+
+#SCRIPTS=/climate/save/emc.climpara/Suru/validation/ufsv1
+#SCRIPTS=/global/save/Tracey.Dorian/S2S_validation/ufsv1
+SCRIPTS=/gpfs/dell2/emc/verification/noscrub/Tracey.Dorian/save/S2S_validation/ufsv1
+#subx=/global/save/Suranjana.Saha/amip/scripts/sub_wcoss
+subx=/gpfs/dell2/emc/modeling/noscrub/Shrinivas.Moorthi/para/bin/sub_wcoss_d
+
+   export listvar=expname,tmpdir,sdate,edate,outdir,listvar
+   outfile=$SCRIPTS/mkvar1x1.$sdate.$edate.out
+   > $outfile
+   $subx -a CFS-T2O -e $listvar -q dev_shared -p 1/1/S -t 1:00 -o $outfile $SCRIPTS/mkvar1x1.sh

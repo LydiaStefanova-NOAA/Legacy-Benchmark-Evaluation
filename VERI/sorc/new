@@ -1,0 +1,53 @@
+c.. get number of cases...
+       icases=0
+       icases=icases+1
+       print *,' icases ',icases
+     * igau,idbug,deg,kpds5,kpds6,kpds7,nfdys,icases)
+     * igau,idbug,deg,kpds5,kpds6,kpds7,nfdys,icases)
+c*  n*24 cases (twice a month for n years), 6 spheres+boxes, 140 6hr leads
+      dimension rms(icases,6,140),sx1(icases,6,140),sy1(icases,6,140),
+     *cv(icases,6,140)
+      dimension crms(icases,6,140),csx1(icases,6,140),
+     *csy1(icases,6,140),ccv(icases,6,140)
+      real*4 save(idim,jdim,icases,115)
+      real*4 savesec(idim,jdim,icases,115)
+      real*4 savever(idim,jdim,icases,115)
+      real*4 acts(icases),cacts(icases),res(16),cres(16)
+     *,res1,res2,res3,res4,res5,icases)
+     *,cres1,cres2,cres3,cres4,cres5,icases)
+     *,res1,res2,res3,res4,res5,icases)
+     *,cres1,cres2,cres3,cres4,cres5,icases)
+      do icase=1,icases
+     *,res1,res2,res3,res4,res5,icases)
+     *,cres1,cres2,cres3,cres4,cres5,icases)
+       write(6,732)(acts(icase),icase=1,icases)
+       write(6,732)(cacts(icase),icase=1,icases)
+      do idum=in,icases,24
+      call loccor(save,savever,idim,jdim,17,1,acloco,icases)
+      call loccor(savesec,savever,idim,jdim,18,1,acloco,icases)
+      call loccor(save,savever,idim,jdim,17,2,acloco,icases)
+      call loccor(savesec,savever,idim,jdim,18,2,acloco,icases)
+      call loccor(save,savever,idim,jdim,17,3,acloco,icases)
+      call loccor(savesec,savever,idim,jdim,18,3,acloco,icases)
+      call loccor(save,savever,idim,jdim,17,4,acloco,icases)
+      call loccor(savesec,savever,idim,jdim,18,4,acloco,icases)
+      call loccor(save,savever,idim,jdim,17,34,acloco,icases)
+      call loccor(savesec,savever,idim,jdim,18,34,acloco,icases)
+     *,res1,res2,res3,res4,res5,icases)
+      dimension rms(icases,6,140),sx1(icases,6,140),sy1(icases,6,140),
+     *cv(icases,6,140)
+       do icase=1,icases
+      subroutine loccor(save,savever,idim,jdim,idch,week,acloc,icases)
+      real*4 save(idim,jdim,icases,115)
+      real*4 savever(idim,jdim,icases,115)
+      fcases=float(icases)
+        fak=27.*fcases
+        do icase=1,icases
+        fak=28.*fcases
+        do icase=1,icases
+        fak=28.*fcases
+        do icase=1,icases
+        fak=28.*fcases
+        do icase=1,icases
+        fak=56.*fcases
+        do icase=1,icases

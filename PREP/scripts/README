@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------------------
+for fv3 data...
+
+1. gethpss.qsub to download data from Bin's hpss
+---------------------------------------------------------------------------------------
+For GG data:
+1. mkvargau.qsub to get flux timeseries data and save on noscrub...
+2. rewrite.qsub is for converting flux files forecast hour from accumulated to instantaneous
+3. mkcopygb.qsub to copygb from C384 to T126 for the GG timeseries data
+   wait to finish before submitting mkclimn.sh for rewrite fields (index files have to be made)
+4. mkclimn.sh to make C384 climos for GG fields...submit individually..
+5. copygbclm.qsub to copygb from C384 to T126 for the climo data
+---------------------------------------------------------------------------------------
+For 1x1 data:
+1. mkvar1x1.qsub to get pgb timeseries data and save on noscrub...
+2. mkclimn.sh to make climos for 1x1 files...submit individually...
+3. mkindexclm.sh for 1x1 fields
+---------------------------------------------------------------------------------------
+For ocean data:
+1. run mkvarocn.sh
+2. run mkclimocn.sh for 2D fields, sshg, dt20c, icec and icetk
+3. run mkclimpot.sh for 3D fields, 26 levels of POT
+4. run mkindexclm.sh

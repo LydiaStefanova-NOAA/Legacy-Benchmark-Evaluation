@@ -1,0 +1,405 @@
+load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_code.ncl"
+load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
+load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
+
+begin
+
+;************************************************
+; specify parameters
+;************************************************
+  VARNAME  = getenv("varname")            ; z500, TMP2m, TMPsfc, PRATEsfc
+  EXPNAME  = getenv("expname")        ; CFSv2ops, UGCSbench
+  WEEKLIST = (/"1","2","3","4","34"/) ; 1, 2, 3, 4, and/or 34
+  JCAP      = getenv("jcap")           ; 126, 574, 1x1
+  if (JCAP.ne."1x1") then
+    RES="T"+JCAP
+  else
+    RES=JCAP
+  end if
+  SUFFIX   = getenv("expnamesuffix")  ; user-specified
+
+  IN_DIR      = getenv("plotdatadir")
+  OUT_DIR     = getenv("plotsdir")
+  MASK_DIR    = getenv("mask_root")
+  SCRIPTS_DIR = getenv("scripts_root")
+
+  ; Specify if masking out land or ocean
+  LAND_MASK   = False
+  OCEAN_MASK  = False
+
+  ; Load LAT/LON from mask
+  if (RES.eq."1x1") then
+    MASK_FILENAME = "mask."+RES+".grib"
+    MASK_DATA     = addfile(MASK_DIR+"/"+MASK_FILENAME,"r")
+    MASK          = MASK_DATA->LAND_3_SFC
+    LAT           = MASK_DATA->lat_3
+    LON           = MASK_DATA->lon_3
+  end if
+  if (RES.eq."T126") then
+    MASK_FILENAME = "mask."+RES+".grib"
+    MASK_DATA     = addfile(MASK_DIR+"/"+MASK_FILENAME,"r")
+    MASK          = MASK_DATA->LAND_126_SFC
+    LAT           = MASK_DATA->lat_126
+    LON           = MASK_DATA->lon_126
+  end if
+  if (RES.eq."T574") then
+    MASK_FILENAME = "mask."+RES+".grib"
+    MASK_DATA     = addfile(MASK_DIR+"/"+MASK_FILENAME,"r")
+    MASK          = MASK_DATA->LAND_GDS4_SFC
+    LAT           = MASK_DATA->g4_lat_0
+    LON           = MASK_DATA->g4_lon_1
+  end if
+  IDIM = dimsizes(LON)
+  JDIM = dimsizes(LAT)
+
+  do wk=0,dimsizes(WEEKLIST)-1 
+  
+  WEEK=WEEKLIST(wk)
+
+;************************************************
+; read in RAW data
+;************************************************
+  FILENAME = EXPNAME+"."+VARNAME+".wk"+WEEK+".raw.ac"
+  DATA_RAW_IN  = fbinread(IN_DIR+"/"+FILENAME,IDIM*JDIM,"float")
+  DATA_RAW     = onedtond(DATA_RAW_IN,(/JDIM,IDIM/))
+  DATA_RAW!0   = "lat"
+  DATA_RAW!1   = "lon"
+  DATA_RAW&lat = LAT
+  DATA_RAW&lon = LON
+  DATA_RAW&lat@units="degrees_north"
+  DATA_RAW&lon@units="degrees_east"
+  DATA_RAW@_FillValue = -999
+  replace_ieeenan(DATA_RAW,DATA_RAW@_FillValue,0)
+  DATA_RAW = where(abs(DATA_RAW).gt.1e20, DATA_RAW@_FillValue, DATA_RAW)
+
+;************************************************
+; read in SEC data
+;************************************************
+  FILENAME = EXPNAME+"."+VARNAME+".wk"+WEEK+".sec.ac"
+  DATA_SEC_IN  = fbinread(IN_DIR+"/"+FILENAME,IDIM*JDIM,"float")
+  DATA_SEC     = onedtond(DATA_SEC_IN,(/JDIM,IDIM/))
+  DATA_SEC!0   = "lat"
+  DATA_SEC!1   = "lon"
+  DATA_SEC&lat = LAT
+  DATA_SEC&lon = LON
+  DATA_SEC&lat@units="degrees_north"
+  DATA_SEC&lon@units="degrees_east"
+  DATA_SEC@_FillValue = -999.
+  replace_ieeenan(DATA_SEC,DATA_SEC@_FillValue,0)
+  DATA_SEC = where(abs(DATA_SEC).gt.1e20, DATA_SEC@_FillValue, DATA_SEC)
+
+;************************************************
+; calculate SEC-RAW differenec
+;************************************************
+  DATA_DIFF = DATA_SEC ; inherit data attributes from SEC
+  DATA_DIFF = DATA_SEC-DATA_RAW
+
+;************************************************
+; Apply land or ocean mask
+;************************************************
+  if (LAND_MASK.eq.True.and.OCEAN_MASK.eq.False) then
+    DATA_SEC = where(MASK.eq.0,DATA_SEC,DATA_SEC@_FillValue)
+    DATA_RAW = where(MASK.eq.0,DATA_RAW,DATA_RAW@_FillValue)
+    DATA_DIFF = where(MASK.eq.0,DATA_DIFF,DATA_DIFF@_FillValue)
+  else if (OCEAN_MASK.eq.True.and.LAND_MASK.eq.False) then
+    DATA_SEC = where(MASK.eq.1,DATA_SEC,DATA_SEC@_FillValue)
+    DATA_RAW = where(MASK.eq.1,DATA_RAW,DATA_RAW@_FillValue)
+    DATA_DIFF = where(MASK.eq.1,DATA_DIFF,DATA_DIFF@_FillValue)
+  else
+    DATA_SEC = DATA_SEC
+    DATA_RAW = DATA_RAW
+    DATA_DIFF = DATA_DIFF
+  end if
+  end if
+
+;************************************************
+; load colormaps
+;************************************************
+ cmap_ac = RGBtoCmap(SCRIPTS_DIR+"/colormaps/ac_rgb.txt")
+ cmap_ac_diff = read_colormap_file("GMT_red2green")
+
+;************************************************
+; plot tropics
+;************************************************
+  FIGNAME_raw = EXPNAME+"."+VARNAME+".wk"+WEEK+".raw.ac.TR"
+  FIGNAME_sec = EXPNAME+"."+VARNAME+".wk"+WEEK+".sec.ac.TR"
+  FIGNAME_diff = EXPNAME+"."+VARNAME+".wk"+WEEK+".sec-raw.ac.TR"
+
+  wks_raw = gsn_open_wks("png",OUT_DIR+"/"+FIGNAME_raw)   ; send graphics to PNG file
+  wks_sec = gsn_open_wks("png",OUT_DIR+"/"+FIGNAME_sec)   ; send graphics to PNG file
+  wks_diff = gsn_open_wks("png",OUT_DIR+"/"+FIGNAME_diff)   ; send graphics to PNG file
+
+  res                   = True
+  res@mpProjection      = "CylindricalEquidistant"; choose projection
+  res@mpGridAndLimbOn   = True                   ; turn on lat/lon lines
+  res@mpPerimOn         = False                  ; turn off box around plot
+  res@mpGridLatSpacingF = 15.                    ; spacing for lat lines
+  res@mpGridLonSpacingF = 30.                    ; spacing for lon lines
+  res@mpFillOn          = True
+  res@mpLimitMode       = "LatLon"
+  res@mpMinLatF         = -30.
+  res@mpMaxLatF         =  30.
+  res@mpMinLonF         = -180.
+  res@mpMaxLonF         =  180.
+  res@mpGeophysicalLineThicknessF = 1.5
+ 
+  res@gsnAddCyclic      = True
+
+  res@cnFillOn          = True              ; color plot desired
+  res@cnFillPalette     = cmap_ac           ; set color map
+  res@cnLineLabelsOn    = False             ; turn off contour lines
+  res@cnLinesOn         = False
+  res@cnLevelSelectionMode = "ManualLevels"
+  res@cnMinLevelValF    = 10.0
+  res@cnMaxLevelValF    = 90.0
+  res@cnLevelSpacingF   = 10.0
+
+  res@mpShapeMode   = "FreeAspect"           ; make plot bigger
+  res@vpWidthF      = 0.8
+  res@vpHeightF     = 0.3
+  res@vpXF          = 0.1
+  res@vpYF          = 0.9
+
+  ;; plot raw
+  res@tiMainString         = VARNAME+" "+EXPNAME+" RAW week "+WEEK
+  contour_raw = gsn_csm_contour_map(wks_raw,DATA_RAW,res)  ; create the plot
+
+  ;; plot sec
+  res@tiMainString         = VARNAME+" "+EXPNAME+" SEC week "+WEEK
+  contour_sec = gsn_csm_contour_map(wks_sec,DATA_SEC,res)  ; create the plot
+
+  ;; plot sec-raw difference
+  delete(res@cnFillPalette)
+  res@cnFillPalette     = cmap_ac_diff
+  res@cnMinLevelValF    = -40.0
+  res@cnMaxLevelValF    = 40.0
+  res@cnLevelSpacingF   = 4.0
+  res@tiMainString         = VARNAME+" "+EXPNAME+" SEC-RAW week "+WEEK
+  contour_diff = gsn_csm_contour_map(wks_diff,DATA_DIFF,res)  ; create the plot
+    
+  delete(res)
+
+;************************************************
+; plot NH
+;************************************************
+  FIGNAME_raw = EXPNAME+"."+VARNAME+".wk"+WEEK+".raw.ac.NH"
+  FIGNAME_sec = EXPNAME+"."+VARNAME+".wk"+WEEK+".sec.ac.NH"
+  FIGNAME_diff = EXPNAME+"."+VARNAME+".wk"+WEEK+".sec-raw.ac.NH"
+
+  wks_raw = gsn_open_wks("png",OUT_DIR+"/"+FIGNAME_raw)   ; send graphics to PNG file
+  wks_sec = gsn_open_wks("png",OUT_DIR+"/"+FIGNAME_sec)   ; send graphics to PNG file
+  wks_diff = gsn_open_wks("png",OUT_DIR+"/"+FIGNAME_diff)   ; send graphics to PNG file
+
+  res                   = True
+  res@gsnPolar          = "NH"   ; select the N. Hem.
+
+  res@mpFillOn   = True
+  res@mpMinLatF  = 20.                            ; minimum latitude
+  res@mpGridLatSpacingF    = 15.                ; change latitude  line spacing
+  res@mpGridLonSpacingF    = 30.                ; change longitude line spacing
+  res@mpGeophysicalLineThicknessF = 1.5
+
+  res@gsnAddCyclic      = True
+
+  res@cnFillOn          = True              ; color plot desired
+  res@cnFillPalette     = cmap_ac           ; set color map
+  res@cnLineLabelsOn    = False             ; turn off contour lines
+  res@cnLinesOn         = False
+  res@cnLevelSelectionMode = "ManualLevels"
+  res@cnMinLevelValF    = 10.0
+  res@cnMaxLevelValF    = 90.0
+  res@cnLevelSpacingF   = 10.0
+
+  ;; plot raw
+  res@tiMainString         = VARNAME+" "+EXPNAME+" RAW week "+WEEK
+  contour_raw = gsn_csm_contour_map_polar(wks_raw,DATA_RAW,res)  ; create the plot
+
+  ;; plot sec
+  res@tiMainString         = VARNAME+" "+EXPNAME+" SEC week "+WEEK
+  contour_sec = gsn_csm_contour_map_polar(wks_sec,DATA_SEC,res)  ; create the plot
+
+  ;; plot sec-raw difference
+  delete(res@cnFillPalette)
+  res@cnFillPalette     = cmap_ac_diff
+  res@cnMinLevelValF    = -40.0
+  res@cnMaxLevelValF    = 40.0
+  res@cnLevelSpacingF   = 4.0
+  res@tiMainString         = VARNAME+" "+EXPNAME+" SEC-RAW week "+WEEK
+  contour_diff = gsn_csm_contour_map_polar(wks_diff,DATA_DIFF,res)  ; create the plot
+
+  delete(res)
+
+;************************************************
+; plot SH
+;************************************************
+  FIGNAME_raw = EXPNAME+"."+VARNAME+".wk"+WEEK+".raw.ac.SH"
+  FIGNAME_sec = EXPNAME+"."+VARNAME+".wk"+WEEK+".sec.ac.SH"
+  FIGNAME_diff = EXPNAME+"."+VARNAME+".wk"+WEEK+".sec-raw.ac.SH"
+
+  wks_raw = gsn_open_wks("png",OUT_DIR+"/"+FIGNAME_raw)   ; send graphics to PNG file
+  wks_sec = gsn_open_wks("png",OUT_DIR+"/"+FIGNAME_sec)   ; send graphics to PNG file
+  wks_diff = gsn_open_wks("png",OUT_DIR+"/"+FIGNAME_diff)   ; send graphics to PNG file
+
+  res                   = True
+  res@gsnPolar          = "SH"   ; select the N. Hem.
+
+  res@mpFillOn   = True
+  res@mpMaxLatF  = -20.                            ; minimum latitude
+  res@mpGridLatSpacingF    = 15.                ; change latitude  line spacing
+  res@mpGridLonSpacingF    = 30.                ; change longitude line spacing
+  res@mpGeophysicalLineThicknessF = 1.5
+
+  res@gsnAddCyclic      = True
+
+  res@cnFillOn          = True              ; color plot desired
+  res@cnFillPalette     = cmap_ac           ; set color map
+  res@cnLineLabelsOn    = False             ; turn off contour lines
+  res@cnLinesOn         = False
+  res@cnLevelSelectionMode = "ManualLevels"
+  res@cnMinLevelValF    = 10.0
+  res@cnMaxLevelValF    = 90.0
+  res@cnLevelSpacingF   = 10.0
+
+  ;; plot raw
+  res@tiMainString         = VARNAME+" "+EXPNAME+" RAW week "+WEEK
+  contour_raw = gsn_csm_contour_map_polar(wks_raw,DATA_RAW,res)  ; create the plot
+
+  ;; plot sec
+  res@tiMainString         = VARNAME+" "+EXPNAME+" SEC week "+WEEK
+  contour_sec = gsn_csm_contour_map_polar(wks_sec,DATA_SEC,res)  ; create the plot
+
+  ;; plot sec-raw difference
+  delete(res@cnFillPalette)
+  res@cnFillPalette     = cmap_ac_diff
+  res@cnMinLevelValF    = -40.0
+  res@cnMaxLevelValF    = 40.0
+  res@cnLevelSpacingF   = 4.0
+  res@tiMainString         = VARNAME+" "+EXPNAME+" SEC-RAW week "+WEEK
+  contour_diff = gsn_csm_contour_map_polar(wks_diff,DATA_DIFF,res)  ; create the plot
+
+  delete(res)
+
+;************************************************
+; plot N. America
+;************************************************
+  FIGNAME_raw = EXPNAME+"."+VARNAME+".wk"+WEEK+".raw.ac.NA"
+  FIGNAME_sec = EXPNAME+"."+VARNAME+".wk"+WEEK+".sec.ac.NA"
+  FIGNAME_diff = EXPNAME+"."+VARNAME+".wk"+WEEK+".sec-raw.ac.NA"
+
+  wks_raw = gsn_open_wks("png",OUT_DIR+"/"+FIGNAME_raw)   ; send graphics to PNG file
+  wks_sec = gsn_open_wks("png",OUT_DIR+"/"+FIGNAME_sec)   ; send graphics to PNG file
+  wks_diff = gsn_open_wks("png",OUT_DIR+"/"+FIGNAME_diff)   ; send graphics to PNG file
+
+  res                   = True
+  res@mpProjection      = "LambertConformal"; choose projection
+  res@mpLambertParallel1F = 25.0         ; two parallels
+  res@mpLambertParallel2F = 55.0
+  res@mpLambertMeridianF  = -95.0        ; central meridian
+  res@mpLimitMode       = "LatLon"
+  res@mpMinLatF         =  15.
+  res@mpMaxLatF         =  75.
+  res@mpMinLonF         = -165.
+  res@mpMaxLonF         =  -65.
+
+  res@mpGridAndLimbOn   = True                   ; turn on lat/lon lines
+  res@mpPerimOn         = True                  ; turn off box around plot
+  res@mpGridLatSpacingF = 15.                    ; spacing for lat lines
+  res@mpGridLonSpacingF = 15.                    ; spacing for lon lines
+  res@mpFillOn          = True
+  res@mpGeophysicalLineThicknessF = 1.5
+  res@mpOutlineBoundarySets     = "geophysicalandusstates"; turn on states
+  res@mpDataBaseVersion         = "mediumres"             ; select database
+  res@mpDataSetName             = "Earth..2"
+
+  res@gsnAddCyclic      = True
+
+  res@cnFillOn          = True              ; color plot desired
+  res@cnFillPalette     = cmap_ac           ; set color map
+  res@cnLineLabelsOn    = False             ; turn off contour lines
+  res@cnLinesOn         = False
+  res@cnLevelSelectionMode = "ManualLevels"
+  res@cnMinLevelValF    = 10.0
+  res@cnMaxLevelValF    = 90.0
+  res@cnLevelSpacingF   = 10.0
+
+  ;; plot raw
+  res@tiMainString         = VARNAME+" "+EXPNAME+" RAW week "+WEEK
+  contour_raw = gsn_csm_contour_map(wks_raw,DATA_RAW,res)  ; create the plot
+
+  ;; plot sec
+  res@tiMainString         = VARNAME+" "+EXPNAME+" SEC week "+WEEK
+  contour_sec = gsn_csm_contour_map(wks_sec,DATA_SEC,res)  ; create the plot
+
+  ;; plot sec-raw difference
+  delete(res@cnFillPalette)
+  res@cnFillPalette     = cmap_ac_diff
+  res@cnMinLevelValF    = -40.0
+  res@cnMaxLevelValF    = 40.0
+  res@cnLevelSpacingF   = 4.0
+  res@tiMainString         = VARNAME+" "+EXPNAME+" SEC-RAW week "+WEEK
+  contour_diff = gsn_csm_contour_map(wks_diff,DATA_DIFF,res)  ; create the plot
+
+  delete(res)
+
+;************************************************
+; plot CONUS
+;************************************************
+  FIGNAME_raw = EXPNAME+"."+VARNAME+".wk"+WEEK+".raw.ac.CONUS"
+  FIGNAME_sec = EXPNAME+"."+VARNAME+".wk"+WEEK+".sec.ac.CONUS"
+  FIGNAME_diff = EXPNAME+"."+VARNAME+".wk"+WEEK+".sec-raw.ac.CONUS"
+
+  wks_raw = gsn_open_wks("png",OUT_DIR+"/"+FIGNAME_raw)   ; send graphics to PNG file
+  wks_sec = gsn_open_wks("png",OUT_DIR+"/"+FIGNAME_sec)   ; send graphics to PNG file
+  wks_diff = gsn_open_wks("png",OUT_DIR+"/"+FIGNAME_diff)   ; send graphics to PNG file
+
+  res                   = True
+  res@mpProjection      = "LambertConformal"; choose projection
+  res@mpLambertParallel1F = 30.0         ; two parallels
+  res@mpLambertParallel2F = 45.0
+  res@mpLambertMeridianF  = -95.0        ; central meridian
+  res@mpLimitMode       = "LatLon"
+  res@mpMinLatF         =  22.5
+  res@mpMaxLatF         =  52.5
+  res@mpMinLonF         = -125.
+  res@mpMaxLonF         =  -65.
+  res@mpGridAndLimbOn   = False                 ; turn on lat/lon lines
+  res@mpPerimOn         = True                  ; turn off box around plot
+  res@mpGridLatSpacingF = 15.                    ; spacing for lat lines
+  res@mpGridLonSpacingF = 15.                    ; spacing for lon lines
+  res@mpFillOn          = True
+  res@mpGeophysicalLineThicknessF = 1.5
+  res@mpOutlineBoundarySets     = "geophysicalandusstates"; turn on states
+  res@mpDataBaseVersion         = "mediumres"             ; select database
+  res@mpDataSetName             = "Earth..2"
+
+  res@gsnAddCyclic      = True
+
+  res@cnFillOn          = True              ; color plot desired
+  res@cnFillPalette     = cmap_ac           ; set color map
+  res@cnLineLabelsOn    = False             ; turn off contour lines
+  res@cnLinesOn         = False
+  res@cnLevelSelectionMode = "ManualLevels"
+  res@cnMinLevelValF    = 10.0
+  res@cnMaxLevelValF    = 90.0
+  res@cnLevelSpacingF   = 10.0
+  ;; plot raw
+  res@tiMainString         = VARNAME+" "+EXPNAME+" RAW week "+WEEK
+  contour_raw = gsn_csm_contour_map(wks_raw,DATA_RAW,res)  ; create the plot
+
+  ;; plot sec
+  res@tiMainString         = VARNAME+" "+EXPNAME+" SEC week "+WEEK
+  contour_sec = gsn_csm_contour_map(wks_sec,DATA_SEC,res)  ; create the plot
+
+  ;; plot sec-raw difference
+  delete(res@cnFillPalette)
+  res@cnFillPalette     = cmap_ac_diff
+  res@cnMinLevelValF    = -40.0
+  res@cnMaxLevelValF    = 40.0
+  res@cnLevelSpacingF   = 4.0
+  res@tiMainString         = VARNAME+" "+EXPNAME+" SEC-RAW week "+WEEK
+  contour_diff = gsn_csm_contour_map(wks_diff,DATA_DIFF,res)  ; create the plot
+
+  delete(res)
+
+  end do
+end  

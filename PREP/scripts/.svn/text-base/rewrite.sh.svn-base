@@ -1,0 +1,89 @@
+#!/bin/ksh
+set -euax
+
+#export sdate=2011040100
+#export edate=2017031500
+#fout=24
+
+export sdate=$1
+export edate=$2
+fout=$3
+
+#expname=UGCSuncpl
+#idir=/ensemble/noscrub/Christopher.Melhauser/UGCS/UGCS.benchmark_uncpl.T574
+
+#expname=UGCSbench
+#idir=/ensemble/noscrub/Christopher.Melhauser/UGCS/UGCS.benchmark.T574
+
+expname=$4
+#idir=$5
+
+#odir=/climate/noscrub/Suranjana.Saha/clim/$expname
+odir=$5/$expname
+
+#varlist='ULWRFtoa'
+#varlist='TMAX'
+#varlist='TMIN'
+varlist='PRATEsfc ULWRFtoa TMIN TMAX'
+
+execdir=$6
+
+export idbug=1
+export idim=1152
+export jdim=576
+export igau=1
+export nfdys=35
+
+for var in $varlist
+do
+
+if [ $var = "PRATEsfc" ] ; then
+ export kpds5=59
+ export kpds6=1
+ export kpds7=0
+fi
+if [ $var = "ULWRFtoa" ] ; then
+ export kpds5=212
+ export kpds6=8
+ export kpds7=0
+fi
+if [ $var = "TMIN" ] ; then
+ export kpds5=16
+ export kpds6=105
+ export kpds7=2
+fi
+if [ $var = "TMAX" ] ; then
+ export kpds5=15
+ export kpds6=105
+ export kpds7=2
+fi
+
+ export grbdir=$odir/$var/org/$var.$expname.T574.
+ export outdir=$odir/$var/T574/$var.$expname.T574.
+ mkdir -p $odir/$var/T574
+
+ CDATE=$sdate
+  until [[ $CDATE -gt $edate ]] ; do
+
+   dd=`echo $CDATE | cut -c7-8`
+ 
+   if [ $dd = "01" -o $dd = "15" ] ; then
+
+    export syear=`echo $CDATE | cut -c1-4`
+    export smonth=`echo $CDATE | cut -c5-6`
+    export sday=`echo $CDATE | cut -c7-8`
+    export shour=`echo $CDATE | cut -c9-10`
+  
+    export eyear=`echo $CDATE | cut -c1-4`
+    export emonth=`echo $CDATE | cut -c5-6`
+    export eday=`echo $CDATE | cut -c7-8`
+    export ehour=`echo $CDATE | cut -c9-10`
+
+    ${execdir}/rewrite.x
+
+   fi
+
+ CDATE=`$ndate $fout $CDATE`
+ done
+
+done

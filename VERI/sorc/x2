@@ -1,0 +1,19 @@
+c.. get number of cases...
+       ncns  = iw3jdn(isyr,ismth,isday)
+       ncne  = iw3jdn(ieyr,iemth,ieday)
+       ndays = ncne - ncns + 1
+       print *,' ncns ',ncns,' ncne ',ncne,' ndays ',ndays
+       icases=0
+       do ncn=ncns,ncne
+        call w3fs26(ncn,iyr,imth,iday,idaywk,idayyr)
+         if((iday.eq.1).or.(iday.eq.15)) then
+          icases=icases+1
+          print *,'icase= ',icases,' iyr= ',iyr,' imth= ',imth,
+     *            ' iday= ',iday
+         endif
+       enddo
+       print *,' icases for ANN ',icases
+
+       nlead=nfdys*4
+       print *,' number of leads ',nlead
+

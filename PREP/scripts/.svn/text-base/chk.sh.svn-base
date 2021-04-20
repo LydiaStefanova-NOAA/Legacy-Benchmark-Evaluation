@@ -1,0 +1,13 @@
+#!/bin/ksh
+
+varlist='t2m sst prate olr'
+for var in $varlist
+do
+ tail -1 mkvar.$var.out
+done
+
+varlist='z500 wnd200 wnd850'
+for var in $varlist
+do
+ tail -1 mkvar1x1.$var.out
+done

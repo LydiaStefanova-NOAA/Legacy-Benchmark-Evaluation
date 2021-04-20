@@ -1,0 +1,41 @@
+SHELL=  /bin/sh
+FC=     ifort
+FFLAGS= -recursive -qopenmp -convert big_endian
+LIBS=   -L/gpfs/dell1/nco/ops/nwprod/lib ${SP_LIB4} ${IP_LIB4} ${W3NCO_LIB4} ${W3EMC_LIB4} ${BACIO_LIB4} ${BUFR_LIB4}
+
+ALL : readgau.x readgaut.x readgaup.x read1x1.x readocn.x readpot.x readsst.x
+.PHONY: ALL
+
+readgau.x     : readgau.o miscng.o
+	$(FC) $(FFLAGS) readgau.o miscng.o -o ../exec/$(@) $(LIBS)
+readgaut.x    : readgaut.o miscng.o
+	$(FC) $(FFLAGS) readgaut.o miscng.o -o ../exec/$(@) $(LIBS)
+readgaup.x    : readgaup.o miscng.o
+	$(FC) $(FFLAGS) readgaup.o miscng.o -o ../exec/$(@) $(LIBS)
+read1x1.x     : read1x1.o miscng.o
+	$(FC) $(FFLAGS) read1x1.o miscng.o -o ../exec/$(@) $(LIBS)
+readocn.x     : readocn.o miscng.o
+	$(FC) $(FFLAGS) readocn.o miscng.o -o ../exec/$(@) $(LIBS)
+readpot.x     : readpot.o miscng.o
+	$(FC) $(FFLAGS) readpot.o miscng.o -o ../exec/$(@) $(LIBS)
+readsst.x     : readsst.o miscng.o
+	$(FC) $(FFLAGS) readsst.o miscng.o -o ../exec/$(@) $(LIBS)
+readgau.o     : readgau.f
+	$(FC) $(FFLAGS) -c readgau.f
+readgaut.o    : readgaut.f
+	$(FC) $(FFLAGS) -c readgaut.f
+readgaup.o    : readgaup.f
+	$(FC) $(FFLAGS) -c readgaup.f
+read1x1.o      : read1x1.f
+	$(FC) $(FFLAGS) -c read1x1.f
+readocn.o      : readocn.f
+	$(FC) $(FFLAGS) -c readocn.f
+readpot.o      : readpot.f
+	$(FC) $(FFLAGS) -c readpot.f
+readsst.o      : readsst.f
+	$(FC) $(FFLAGS) -c readsst.f
+miscng.o        : miscng.f
+	$(FC) $(FFLAGS) -c miscng.f
+
+clean  :
+	rm *.o ../exec/*.x

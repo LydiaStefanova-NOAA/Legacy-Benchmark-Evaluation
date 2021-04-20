@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/projects/!svn/ver/95413/ugcs/branches/Christopher/UGCS_veri_pkg/PLOT
+END
+plot_statistics.ncl
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/projects/!svn/ver/95413/ugcs/branches/Christopher/UGCS_veri_pkg/PLOT/plot_statistics.ncl
+END
+plot_rmm.ncl
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/projects/!svn/ver/95348/ugcs/branches/Christopher/UGCS_veri_pkg/PLOT/plot_rmm.ncl
+END
+plot.sh
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/projects/!svn/ver/95413/ugcs/branches/Christopher/UGCS_veri_pkg/PLOT/plot.sh
+END
+plot_mjo_vars.ncl
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/projects/!svn/ver/95348/ugcs/branches/Christopher/UGCS_veri_pkg/PLOT/plot_mjo_vars.ncl
+END
+plot_acmap.ncl
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/projects/!svn/ver/95262/ugcs/branches/Christopher/UGCS_veri_pkg/PLOT/plot_acmap.ncl
+END

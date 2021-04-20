@@ -1,0 +1,63 @@
+#!/bin/ksh
+#set -x
+
+expname=UGCSbench
+expname=UGCSuncpl
+expname=UGCSbench_fix
+
+mmlist='01 02 03 04 05 06 07 08 09 10 11 12'
+ddlist='01 15'
+hh='00'
+
+varlist='TMIN'
+varlist='TMAX'
+varlist='TMP2m'
+varlist='TMP2sfc'
+varlist='PRATEsfc'
+varlist='ULWRFtoa'
+
+varlist='PRATEsfc TMPsfc TMP2m ULWRFtoa TMIN TMAX'
+
+windex=/nwprod/util/exec/grbindex
+wgrib=/nwprod/util/exec/wgrib
+copygb=/nwprod/util/exec/copygb
+
+for var in $varlist
+do
+
+ idir=/climate/noscrub/Suranjana.Saha/clim/climatology/$expname/$var/T574
+ odir=/climate/noscrub/Suranjana.Saha/clim/climatology/$expname/$var/T126
+ mkdir -p $odir
+ cd $odir
+
+ for mm in $mmlist
+ do
+ 
+  for dd in $ddlist
+  do
+
+   ifile=$idir/$var.$mm.$dd.${hh}Z.mean.clim.daily.T574.$expname
+   if [ -s $ifile ] ; then
+    ls -l $ifile
+    $windex $ifile $ifile.index
+    ls -l $ifile.index
+    ofile=$odir/$var.$mm.$dd.${hh}Z.mean.clim.daily.T126.$expname
+    > $ofile
+    if [ $var = "PRATEsfc" ] ; then
+     $copygb -x -g126 -ip3 $ifile $ofile
+    else
+     $copygb -x -g126 $ifile $ofile
+    fi
+    ls -l $ofile
+    $windex $ofile $ofile.index
+    ls -l $ofile.index
+   else
+    echo "$ifile not there"
+    exit
+   fi
+
+  done
+
+ done
+
+done

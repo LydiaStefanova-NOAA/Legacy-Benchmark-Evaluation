@@ -1,0 +1,135 @@
+#!/bin/ksh
+set -xaeu
+
+#sdate=2011040100
+#edate=2017031500
+sdate=$1
+edate=$2
+#expname='UGCSbench_fix'
+expname=$3
+#exp_root_dir=/climate/noscrub/Suranjana.Saha/clim/
+#exp_root_dir=/scratch3/NCEPDEV/climate/noscrub/Christopher.Melhauser/clim/
+exp_root_dir=$4
+#exec_dir=/climate/save/Suranjana.Saha/clim/ugcs/
+#exec_dir=/scratch3/NCEPDEV/climate/save/Christopher.Melhauser/clim_cm/PREP
+exec_dir=$5
+#export list=$listvar
+#echo "var is $varx"
+#echo "expname is $expname"
+#echo "sdate is $sdate"
+#echo "edate is $edate"
+
+#var=$varx
+
+#varlist='TMPsfc TMP2m PRATEsfc ULWRFtoa TMIN TMAX z500 wnd200 wnd850'
+varlist='TMPsfc TMP2m PRATEsfc ULWRFtoa TMIN TMAX'
+
+export idbug=1
+
+export nfdys=35
+
+export syear=`echo $sdate | cut -c1-4`
+export smonth=`echo $sdate | cut -c5-6`
+export sday=`echo $sdate | cut -c7-8`
+export shour=`echo $sdate | cut -c9-10`
+#
+export eyear=`echo $edate | cut -c1-4`
+export emonth=`echo $edate | cut -c5-6`
+export eday=`echo $edate | cut -c7-8`
+export ehour=`echo $edate | cut -c9-10`
+
+for var in ${varlist[@]}
+ do
+ if [ $var = "TMPsfc" ] ; then
+  export kpds5=11
+  export kpds6=1
+  export kpds7=0
+  export igau=1
+  export iwnd=0
+ fi
+ if [ $var = "TMP2m" ] ; then
+  export kpds5=11
+  export kpds6=105
+  export kpds7=2
+  export igau=1
+  export iwnd=0
+ fi
+ if [ $var = "PRATEsfc" ] ; then
+  export kpds5=59
+  export kpds6=1
+  export kpds7=0
+  export igau=1
+  export iwnd=0
+ fi
+ if [ $var = "ULWRFtoa" ] ; then
+  export kpds5=212
+  export kpds6=8
+  export kpds7=0
+  export igau=1
+  export iwnd=0
+ fi
+ if [ $var = "TMIN" ] ; then
+  export kpds5=16
+  export kpds6=105
+  export kpds7=2
+  export igau=1
+  export iwnd=0
+ fi
+ if [ $var = "TMAX" ] ; then
+  export kpds5=15
+  export kpds6=105
+  export kpds7=2
+  export igau=1
+  export iwnd=0
+ fi
+ if [ $var = "z500" ] ; then
+  export kpds5=7
+  export kpds6=100
+  export kpds7=500
+  export igau=0
+  export iwnd=0
+ fi
+ if [ $var = "wnd200" ] ; then
+  export kpds5u=33
+  export kpds5v=34
+  export kpds6=100
+  export kpds7=200
+  export igau=0
+  export iwnd=1
+ fi
+ if [ $var = "wnd850" ] ; then
+  export kpds5u=33
+  export kpds5v=34
+  export kpds6=100
+  export kpds7=850
+  export igau=0
+  export iwnd=1
+ fi
+
+ if [ $igau -eq 0 ] ; then
+  export hgrid=1x1
+  export idim=360
+  export jdim=181
+  export grbdir="${exp_root_dir}/$expname/$var/$var.$expname.$hgrid."
+  export clmdir="${exp_root_dir}/climatology/$expname/$var/$var."
+  mkdir -p ${exp_root_dir}/climatology/$expname/$var
+ else
+  #  make climos at hires and then copygb them...
+  export hgrid=T126
+  export idim=384
+  export jdim=190
+  #xport hgrid=T574
+  #export idim=1152
+  #export jdim=576
+  export grbdir="${exp_root_dir}/$expname/$var/$hgrid/$var.$expname.$hgrid."
+  export clmdir="${exp_root_dir}/climatology/$expname/$var/$hgrid/$var."
+  mkdir -p ${exp_root_dir}/climatology/$expname/$var/$hgrid
+ fi
+
+  if [ $iwnd -eq 0 ] ; then
+   ${exec_dir}/mkclimn.x
+  else
+   ${exec_dir}/mkclimwnd.x
+  fi
+done
+exit

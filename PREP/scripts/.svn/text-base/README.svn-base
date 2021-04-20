@@ -1,0 +1,18 @@
+---------------------------------------------------------------------------------------
+for UGCS data...
+
+first run mkvar.sh to get data from Chris's directory for GG data from the flx files
+(run mkvar.one.sh to get data for just one variable from Chris's directory for GG data from the flx files)
+
+first run mkvar1x1.sh to get data from Chris's directory for 1x1 data from the pgb files
+(run mkvar1x1.one.sh to get data for just one variable from Chris's directory for 1x1 data from the pgb files)
+
+rewrite.sh is for converting flux files forecast hour from accumulated to instantaneous
+
+run mkcopygb.sh to copygb from T574 to T126 for the GG timeseries data
+
+then run mkclimn.sh to make climos, only works for T126 now.
+run mkindexclm.sh to make index of climo files: may not be necessary
+
+Only if T574 climos are made:
+run copygbclm.sh to copygb from T574 to T126 for the climo data

@@ -1,0 +1,91 @@
+#!/bin/ksh
+set -euax
+
+sdate=$1
+edate=$2
+
+#yyyyst=2017
+#yyyyet=2017
+#mmst=1
+#mmet=3
+#ddlist='01 15'
+
+yyyyst=`echo $sdate | cut -c1-4`
+yyyyet=`echo $edate | cut -c1-4`
+mmst=`echo $sdate | cut -c5-6`
+mmet=`echo $edate | cut -c5-6`
+ddlist='01 15'
+
+#expname=UGCSbench
+#expname=UGCSuncpl
+expname=$3
+
+#varlist='TMAX'
+#varlist='TMIN'
+#varlist='ULWRFtoa'
+#varlist='TMPsfc'
+#varlist='TMP2m'
+#varlist='PRATEsfc'
+
+varlist='TMPsfc TMP2m PRATEsfc ULWRFtoa TMIN TMAX'
+
+#windex=/nwprod/util/exec/grbindex
+#wgrib=/nwprod/util/exec/wgrib
+#copygb=/nwprod/util/exec/copygb
+
+for var in $varlist
+do
+
+ idir=$4/$expname/$var/T574
+ odir=$4/$expname/$var/T126
+ mkdir -p $odir
+ cd $odir
+
+ yyyy=$yyyyst
+ until [[ $yyyy -gt $yyyyet ]] ; do
+  mms=1
+  mme=12
+  if [[ $yyyy -eq $yyyyst ]] ; then
+   mms=$mmst
+  fi
+  if [[ $yyyy -eq $yyyyet ]] ; then
+   mme=$mmet
+  fi
+  mm=$mms
+  until [[ $mm -gt $mme ]] ; do
+   #if [[ $mm -le 9 ]] ; then
+    mm=`printf %02d $mm`
+   #fi
+
+   for dd in $ddlist
+   do
+    ifile=$idir/$var.$expname.T574.${yyyy}${mm}$dd.grib
+    if [[ -s $ifile ]] ; then
+     ls -l $ifile
+     > $ifile.index
+     $windex $ifile $ifile.index
+     ls -l $ifile.index
+     ofile=$odir/$var.$expname.T126.${yyyy}${mm}$dd.grib
+     > $ofile
+     if [ $var = "PRATEsfc" ] ; then
+      $copygb -x -g126 -ip3 $ifile $ofile
+     else
+      $copygb -x -g126 $ifile $ofile
+     fi
+     ls -l $ofile
+     $windex $ofile $ofile.index
+     ls -l $ofile.index
+    else
+     echo "$ifile not there"
+     exit
+    fi
+   done
+
+  mm=`expr $mm + 1`
+  done
+ yyyy=`expr $yyyy + 1`
+ done
+
+done
+
+echo 'I am DONE in $expname'

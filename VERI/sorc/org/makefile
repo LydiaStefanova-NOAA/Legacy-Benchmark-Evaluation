@@ -1,0 +1,37 @@
+SHELL=  /bin/sh
+FC=     ifort
+FFLAGS= -recursive -openmp -heap-arrays
+LIBS=   -L/nwprod/lib -lsp_4 -lip_4 -lw3nco_4 -lw3emc_4 -lbacio_4 -lbufr_4_64
+
+ALL : readgau.x readgaut.x readgaup.x read1x1.x readocn.x readpot.x
+.PHONY: ALL
+
+readgau.x     : readgau.o miscng.o
+	$(FC) $(FFLAGS) readgau.o miscng.o -o ../exec/$(@) $(LIBS)
+readgaut.x    : readgaut.o miscng.o
+	$(FC) $(FFLAGS) readgaut.o miscng.o -o ../exec/$(@) $(LIBS)
+readgaup.x    : readgaup.o miscng.o
+	$(FC) $(FFLAGS) readgaup.o miscng.o -o ../exec/$(@) $(LIBS)
+read1x1.x     : read1x1.o miscng.o
+	$(FC) $(FFLAGS) read1x1.o miscng.o -o ../exec/$(@) $(LIBS)
+readocn.x     : readocn.o miscng.o
+	$(FC) $(FFLAGS) readocn.o miscng.o -o ../exec/$(@) $(LIBS)
+readpot.x     : readpot.o miscng.o
+	$(FC) $(FFLAGS) readpot.o miscng.o -o ../exec/$(@) $(LIBS)
+readgau.o     : readgau.f
+	$(FC) $(FFLAGS) -c readgau.f
+readgaut.o    : readgaut.f
+	$(FC) $(FFLAGS) -c readgaut.f
+readgaup.o    : readgaup.f
+	$(FC) $(FFLAGS) -c readgaup.f
+read1x1.o      : read1x1.f
+	$(FC) $(FFLAGS) -c read1x1.f
+readocn.o      : readocn.f
+	$(FC) $(FFLAGS) -c readocn.f
+readpot.o      : readpot.f
+	$(FC) $(FFLAGS) -c readpot.f
+miscng.o        : miscng.f
+	$(FC) $(FFLAGS) -c miscng.f
+
+clean  :
+	rm *.o ../exec/*.x

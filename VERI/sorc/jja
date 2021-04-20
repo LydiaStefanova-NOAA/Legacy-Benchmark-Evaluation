@@ -1,0 +1,1 @@
+        if((imth.ge.6).and.(imth.le.8)) then

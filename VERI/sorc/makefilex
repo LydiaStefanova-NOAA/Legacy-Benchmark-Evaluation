@@ -1,0 +1,12 @@
+SHELL=  /bin/sh
+FC=     ifort
+FFLAGS= -recursive -openmp -heap-arrays
+LIBS=   -L/nwprod/lib -lsp_4 -lip_4 -lw3nco_4 -lw3emc_4 -lbacio_4 -lbufr_4_64
+
+ALL : read1x1.x
+.PHONY: ALL
+
+read1x1.o      : read1x1.f
+	$(FC) $(FFLAGS) -c read1x1.f
+miscng.o        : miscng.f
+	$(FC) $(FFLAGS) -c miscng.f

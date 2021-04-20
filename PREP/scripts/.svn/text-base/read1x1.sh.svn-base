@@ -1,0 +1,68 @@
+#!/bin/ksh
+set -xaeu
+
+bin_root=/cpc/backup/Huug.Vandendool/ugcs/ugcsnew
+plotdata_root=/cpc/backup/Huug.Vandendool/ugcs/ugcsnew/plotdata
+plots_root=/cpc/backup/Huug.Vandendool/ugcs/ugcsnew/plots
+scripts_root=/cpc/backup/Huug.Vandendool/ugcs/ugcsnew
+mask_root=/cpc/backup/Huug.Vandendool/ugcs/ugcsnew/mask
+
+expnamelist='UGCSbench CFSv2ops UGCSuncpl'
+expnamelist='UGCSuncpl'
+expnamesuffix='1'
+
+#varlist='z500 wnd200'
+varlist='z500'
+
+export sdate=2011040100
+export edate=2017031500
+
+export idbug=1
+export nfdys=35
+
+export igau=0
+export idim=360
+export jdim=181
+
+export syear=`echo $sdate | cut -c1-4`
+export smonth=`echo $sdate | cut -c5-6`
+export sday=`echo $sdate | cut -c7-8`
+export shour=`echo $sdate | cut -c9-10`
+#
+export eyear=`echo $edate | cut -c1-4`
+export emonth=`echo $edate | cut -c5-6`
+export eday=`echo $edate | cut -c7-8`
+export ehour=`echo $edate | cut -c9-10`
+
+export maskfile=${mask_root}/mask.1x1.grib
+
+for expname in $expnamelist
+do
+ export expname
+
+for var in $varlist
+do
+ export var
+
+ if [ $var = "z500" ] ; then
+  export kpds5=7
+  export kpds6=100
+  export kpds7=500
+ fi
+
+  export cfsrdir="/climate/noscrub/Suranjana.Saha/clim/CFSR/$var/$var.CFSR.1x1."
+  export clmcfsr="/climate/noscrub/Suranjana.Saha/clim/climatology/CFSR/$var/$var."
+
+  export expdir="/climate/noscrub/Suranjana.Saha/clim/$expname/$var/$var.$expname.1x1."
+  export clmexp="/climate/noscrub/Suranjana.Saha/clim/climatology/$expname/$var/$var."
+
+ export plotsdir=${plots_root}/$var.$expname.1x1.$expnamesuffix
+ export plotdatadir=${plotdata_root}/$var.$expname.1x1.$expnamesuffix
+ if [ ! -d $plotsdir ]; then mkdir -p $plotsdir; fi
+ if [ ! -d $plotdatadir ]; then mkdir -p $plotdatadir; fi
+
+ ${bin_root}/read1x1.x
+
+done
+
+done

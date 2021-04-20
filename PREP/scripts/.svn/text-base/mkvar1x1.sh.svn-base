@@ -1,0 +1,114 @@
+#!/bin/ksh
+set -euax
+
+#######################################################
+# This program may take up to 13hrs to complete!
+#######################################################
+
+sdate=$1
+edate=$2
+fout=$3
+#sdate=2011040100
+#edate=2017031500
+#fout=24
+
+#expname=UGCSuncpl
+#idir=/ensemble/noscrub/Christopher.Melhauser/UGCS/UGCS.benchmark_uncpl.T574
+
+#expname=UGCSbench
+#idir=/ensemble/noscrub/Christopher.Melhauser/UGCS/UGCS.benchmark.T574
+
+expname=$4
+idir=$5
+
+#outdir=/climate/noscrub/Suranjana.Saha/clim/$expname
+outdir=$6/$expname
+
+varlist='z500 wnd200 wnd850'
+
+#wgrib2=/nwprod/util/exec/wgrib2
+#cnvgrib=/nwprod/util/exec/cnvgrib
+#wgrib=/nwprod/util/exec/wgrib
+#windex=/nwprod/util/exec/grbindex
+
+yyyyst=`echo $sdate | cut -c1-4`
+yyyyet=`echo $edate | cut -c1-4`
+mmst=`echo $sdate | cut -c5-6`
+mmet=`echo $edate | cut -c5-6`
+
+  ndf=35
+  ndf=`expr $ndf \* 24`
+  
+  FHS=0
+  FHE=$ndf
+  FHI=6
+ 
+  ivar=pgbf
+
+  CDATE=$sdate
+  until [[ $CDATE -gt $edate ]] ; do
+
+   yyyy=`echo $CDATE | cut -c1-4`
+   mm=`echo $CDATE | cut -c5-6`
+   dd=`echo $CDATE | cut -c7-8`
+   hh=`echo $CDATE | cut -c9-10`
+
+   if [ $dd = "01" -o $dd = "15" ] ; then
+
+    suffix=$expname.1x1.${yyyy}${mm}$dd
+
+    for var in $varlist
+    do
+     odir=$outdir/$var
+     mkdir -p $odir
+     ogrb2=$odir/$var.$suffix
+     > $ogrb2
+    done
+
+    FH=$FHS
+    until [[ $FH -gt $FHE ]] ; do
+     if [ $FH -le 9 ] ; then
+      FH=0$FH
+     fi
+
+     ifile=$idir/${ivar}$FH.$CDATE.grb2
+
+     if [[ -s $ifile ]] ; then
+      ls -l $ifile
+
+      $wgrib2 $ifile -append \
+       -if ":HGT:500 mb:" -grib $outdir/z500/z500.$suffix \
+       -if ":UGRD:200 mb:" -grib $outdir/wnd200/wnd200.$suffix \
+       -if ":VGRD:200 mb:" -grib $outdir/wnd200/wnd200.$suffix \
+       -if ":UGRD:850 mb:" -grib $outdir/wnd850/wnd850.$suffix \
+       -if ":VGRD:850 mb:" -grib $outdir/wnd850/wnd850.$suffix > /dev/null
+
+     else
+
+      echo "$ifile not found"
+      exit 8
+     fi
+
+     for var in $varlist
+     do
+      ogrb2=$outdir/$var/$var.$suffix
+      ls -l $ogrb2
+      ogrib=$ogrb2.grib
+      > $ogrib
+      $cnvgrib -g21 $ogrb2 $ogrib
+      ls -l $ogrib
+      $wgrib $ogrib > $ogrib.inv
+      ls -l $ogrib.inv
+      $windex $ogrib $ogrib.index
+      ls -l $ogrib.index
+     done
+
+    FH=`expr $FH \+ $FHI`
+    done
+
+   fi
+
+  CDATE=`$ndate $fout $CDATE`
+  done
+
+echo "I am DONE for mkvar1x1"

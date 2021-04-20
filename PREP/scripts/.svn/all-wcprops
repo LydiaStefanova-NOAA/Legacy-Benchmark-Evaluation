@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/projects/!svn/ver/95330/ugcs/branches/Christopher/UGCS_veri_pkg/PREP/scripts
+END
+rename.sh
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/projects/!svn/ver/95262/ugcs/branches/Christopher/UGCS_veri_pkg/PREP/scripts/rename.sh
+END
+mkclimn.sh
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/projects/!svn/ver/95330/ugcs/branches/Christopher/UGCS_veri_pkg/PREP/scripts/mkclimn.sh
+END
+mkvar1x1.sh
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/projects/!svn/ver/95284/ugcs/branches/Christopher/UGCS_veri_pkg/PREP/scripts/mkvar1x1.sh
+END
+mkcopygb.sh
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/projects/!svn/ver/95330/ugcs/branches/Christopher/UGCS_veri_pkg/PREP/scripts/mkcopygb.sh
+END
+mkindexclm.sh
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/projects/!svn/ver/95284/ugcs/branches/Christopher/UGCS_veri_pkg/PREP/scripts/mkindexclm.sh
+END
+copygbclm.sh
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/projects/!svn/ver/95262/ugcs/branches/Christopher/UGCS_veri_pkg/PREP/scripts/copygbclm.sh
+END
+mkindex.sh
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/projects/!svn/ver/95262/ugcs/branches/Christopher/UGCS_veri_pkg/PREP/scripts/mkindex.sh
+END
+mkvar.sh
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/projects/!svn/ver/95284/ugcs/branches/Christopher/UGCS_veri_pkg/PREP/scripts/mkvar.sh
+END
+rewrite.sh
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/projects/!svn/ver/95284/ugcs/branches/Christopher/UGCS_veri_pkg/PREP/scripts/rewrite.sh
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/projects/!svn/ver/95262/ugcs/branches/Christopher/UGCS_veri_pkg/PREP/scripts/README
+END
+chk.sh
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/projects/!svn/ver/95262/ugcs/branches/Christopher/UGCS_veri_pkg/PREP/scripts/chk.sh
+END
+getcpc.sh
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/projects/!svn/ver/95262/ugcs/branches/Christopher/UGCS_veri_pkg/PREP/scripts/getcpc.sh
+END
+read1x1.sh
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/projects/!svn/ver/95262/ugcs/branches/Christopher/UGCS_veri_pkg/PREP/scripts/read1x1.sh
+END

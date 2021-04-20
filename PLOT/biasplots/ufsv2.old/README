@@ -1,0 +1,27 @@
+##########################################################
+#   make bias plots
+##########################################################
+
+first run mkctl.sh here to create control files 3 times
+
+then make changes to all the ini.gs and bias.gs programs for new experiment
+
+next log into own user id to make plots...
+mkdir -p /ptmpp1/Suranjana.Saha/plots/ufsv2
+cd /ptmpp1/Suranjana.Saha/plots/ufsv2
+cp /climate/save/emc.climpara/Suru/validation/UGCS_veri_pkg/PLOT/biasplots/* .
+cp /climate/save/emc.climpara/Suru/validation/UGCS_veri_pkg/PLOT/biasplots/ufsv2/*gs .
+for any variable, first run the ini.gs for that variable in grads
+then while in grads, run the bias.gs for that variable multiple times while in grads
+
+login to rzdm
+cd /home/www/emc_cfs/htdocs/pub/raid1/UGCS_veri_pkg_out
+mkdir bias-ufsv2
+copy allow.cfg
+copy index.php
+
+get back to own id:
+scp -p *png suranjana.saha@emcrzdm.ncep.noaa.gov:/home/www/emc_cfs/htdocs/pub/raid1/UGCS_veri_pkg_out/bias-ufsv2/.
+
+important to copy back all png files from /ptmpp1/Suranjana.Saha/plots to this directory
+

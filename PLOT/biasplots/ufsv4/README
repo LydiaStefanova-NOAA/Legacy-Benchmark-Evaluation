@@ -1,0 +1,40 @@
+##########################################################
+#   make bias plots
+##########################################################
+
+mkdir a new directory for new experiment (mkdir -p ufsv3)
+cd ufsv33
+/bin/cp /sss/emc/climate/save/emc.climpara/Suru/S2S_validation/UGCS_veri_pkg/PLOT/biasplots/README .
+/bin/cp /sss/emc/climate/save/emc.climpara/Suru/S2S_validation/UGCS_veri_pkg/PLOT/biasplots/mkctl.sh .
+/bin/cp /sss/emc/climate/save/emc.climpara/Suru/S2S_validation/UGCS_veri_pkg/PLOT/biasplots/mkctlseas.sh .
+make changes in all *mcktl files
+then run mkctl.sh three times to create control files for annual means
+then run mkctlseas.sh three times to create control files for seasonal means
+
+/bin/cp /sss/emc/climate/save/emc.climpara/Suru/S2S_validation/UGCS_veri_pkg/PLOT/biasplots/*ini*gs .
+/bin/cp /sss/emc/climate/save/emc.climpara/Suru/S2S_validation/UGCS_veri_pkg/PLOT/biasplots/*bias*gs .
+make changes in all *gs files
+(note that Dell machines are big_endian)
+
+next log into own user id to make plots...
+mkdir -p /gpfs/dell2/ptmp/Huug.Vandendool/plots
+cd /gpfs/dell2/ptmp/Huug.Vandendool/plots
+cp /sss/emc/climate/save/emc.climpara/Suru/S2S_validation/UGCS_veri_pkg/PLOT/biasplots/ufsv33/*gs .
+for any variable, first run the ini.gs for that variable
+then while in grads, run the bias.gs for that variable multiple times while in grads
+
+then go to rzdm;raid1;cd U*out;mkdir bias-ufsv3; chmod a+rx bias-ufsv3
+copy allow.cfg and index.php into bias-ufsv3
+
+go back to dell
+scp -p *png suranjana.saha@emcrzdm.ncep.noaa.gov:/home/www/emc_cfs/htdocs/pub/raid1/UGCS_veri_pkg_out/bias-ufsv3/.
+
+then go to rzdm;raid1;cd U*out;cd bias-ufsv3;chmod a+r *
+#################################################################
+## DO NOT FORGET TO COPY THE PLOTS TO subdirectory plots..
+## cd /sss/emc/climate/save/emc.climpara/Suru/S2S_validation/UGCS_veri_pkg/PLOT/biasplots/ufsv33
+## mkdir plots
+## cd plots
+## cp -r /gpfs/dell2/ptmp/Huug.Vandendool/plots/* .
+#################################################################
+
