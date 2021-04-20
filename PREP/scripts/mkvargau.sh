@@ -32,10 +32,10 @@ varlist='TMPsfc TMP2m PRATEsfc ULWRFtoa TMIN TMAX'
 #cnvgrib=/gpfs/dell1/nco/ops/nwprod/grib_util.v1.0.6/exec/cnvgrib
 #wgrib=/gpfs/dell1/nco/ops/nwprod/grib_util.v1.0.6/exec/wgrib
 #windex=/gpfs/dell1/nco/ops/nwprod/grib_util.v1.0.6/exec/grbindex
-windex=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/grib_util.v1.1.1/exec/grbindex
-wgrib=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/grib_util.v1.1.1/exec/wgrib
-copygb=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/grib_util.v1.1.1/exec/copygb
-wgrib2=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/grib_util.v1.1.1/exec/wgrib2
+#windex=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/grib_util.v1.1.1/exec/grbindex
+#wgrib=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/grib_util.v1.1.1/exec/wgrib
+#copygb=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/grib_util.v1.1.1/exec/copygb
+#wgrib2=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/grib_util.v1.1.1/exec/wgrib2
 
 # Forecast lead * 24 hours
 
@@ -150,7 +150,8 @@ wgrib2=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/grib_util.v1.1.1/exec/wgrib2
    fi
 
 ##  CDATE=`/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate $fout $CDATE`
-     CDATE=`/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/prod_util.v1.1.0/exec/ndate $fout $CDATE`
+#     CDATE=`/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/prod_util.v1.1.0/exec/ndate $fout $CDATE`
+     CDATE=`$ndate $fout $CDATE`
   done
 
 echo "I am DONE in mkvargau for $yyyy"

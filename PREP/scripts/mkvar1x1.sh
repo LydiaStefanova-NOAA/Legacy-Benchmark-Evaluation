@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/bin/bash
 #set -x
 
 expname=$1
@@ -7,11 +7,7 @@ edate=$3
 tmpdir=$4
 outdir=$5
 
-#expname=UFSv1
-#sdate=2011040100
-#edate=2011121500
-#tmpdir=/gpfs/dell2/ptmp/Tracey.Dorian/UFSv1/pgb
-#outdir=/gpfs/dell2/emc/verification/noscrub/Tracey.Dorian/validation/UGCS_veri_pkg_out/PREP_OUT/UFSv1
+
 
 echo "expname is $expname"
 echo "sdate is $sdate"
@@ -24,15 +20,6 @@ fout=24
 varlist='z500 wnd200 wnd850'
 
 
-#wgrib2=/gpfs/dell1/nco/ops/nwprod/grib_util.v1.0.6/exec/wgrib2
-#cnvgrib=/gpfs/dell1/nco/ops/nwprod/grib_util.v1.0.6/exec/cnvgrib
-#wgrib=/gpfs/dell1/nco/ops/nwprod/grib_util.v1.0.6/exec/wgrib
-#windex=/gpfs/dell1/nco/ops/nwprod/grib_util.v1.0.6/exec/grbindex
-windex=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/grib_util.v1.1.1/exec/grbindex
-wgrib=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/grib_util.v1.1.1/exec/wgrib
-wgrib2=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/grib_util.v1.1.1/exec/wgrib2
-copygb=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/grib_util.v1.1.1/exec/copygb
-ndate=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/prod_util.v1.1.0/exec/ndate
 
   ndf=35
   ndf=`expr $ndf \* 24`
@@ -108,9 +95,10 @@ ndate=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/prod_util.v1.1.0/exec/ndate
 
    fi
 
-## CDATE=`/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate $fout $CDATE`
-   CDATE=`/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/prod_util.v1.1.0/exec/ndate $fout $CDATE`
-  done
+# CDATE=`/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/prod_util.v1.1.0/exec/ndate $fout $CDATE`
+  CDATE=`$ndate $fout $CDATE`
+ 
+done
 
 echo "I am DONE for mkvar1x1 for $CDATE"
 exit

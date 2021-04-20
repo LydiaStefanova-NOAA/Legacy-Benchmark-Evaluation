@@ -23,7 +23,7 @@ ddlist='01 15'
 hhlist='00'
 
 #windex=/gpfs/dell1/nco/ops/nwprod/grib_util.v1.0.6/exec/grbindex
-windex=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/grib_util.v1.1.1/exec/grbindex
+#windex=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/grib_util.v1.1.1/exec/grbindex
 
  for mm in $mmlist
  do

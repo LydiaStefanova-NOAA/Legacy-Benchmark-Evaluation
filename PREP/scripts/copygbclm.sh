@@ -26,9 +26,9 @@ hh='00'
 ##windex=/gpfs/dell1/nco/ops/nwprod/grib_util.v1.0.6/exec/grbindex
 ##wgrib=/gpfs/dell1/nco/ops/nwprod/grib_util.v1.0.6/exec/wgrib
 ##copygb=/gpfs/dell1/nco/ops/nwprod/grib_util.v1.0.6/exec/copygb
-windex=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/grib_util.v1.1.1/exec/grbindex
-wgrib=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/grib_util.v1.1.1/exec/wgrib
-copygb=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/grib_util.v1.1.1/exec/copygb
+#windex=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/grib_util.v1.1.1/exec/grbindex
+#wgrib=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/grib_util.v1.1.1/exec/wgrib
+#copygb=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/grib_util.v1.1.1/exec/copygb
 
  idir=$cdir/$var/$hgrid
  odir=$cdir/$var/$lgrid

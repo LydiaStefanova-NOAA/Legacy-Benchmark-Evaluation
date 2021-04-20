@@ -95,7 +95,8 @@ fi
    fi
 
 ## CDATE=`/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate $fout $CDATE`
-    CDATE=`/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/prod_util.v1.1.0/exec/ndate $fout $CDATE`
+#    CDATE=`/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/prod_util.v1.1.0/exec/ndate $fout $CDATE`
+    CDATE=`$ndate $fout $CDATE`
  done
 
  echo "I am DONE in rewrite for $var"
