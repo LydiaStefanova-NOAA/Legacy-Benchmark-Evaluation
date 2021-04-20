@@ -42,26 +42,26 @@ export CFSR_data=/scratch1/NCEPDEV/global/Partha.Bhattacharjee/Veri_pkg/Obs_clim
 export CFSR_clim=/scratch1/NCEPDEV/global/Partha.Bhattacharjee/Veri_pkg/Obs_clim/validation/climatology/CFSR
 export verf_data=/scratch1/NCEPDEV/global/Partha.Bhattacharjee/Veri_pkg/Obs_clim/validation/verf
 export verf_clim=/scratch1/NCEPDEV/global/Partha.Bhattacharjee/Veri_pkg/Obs_clim/validation/climatology/verf
-echo "attempting to link obs data"
+echo "linking obs data"
 if [ ! -d $dataroot/CFSR ] ; then
   ln -s $CFSR_data $dataroot
 else
-  echo "$dataroot/CFSR already exists"
+  echo "skipping $dataroot/CFSR already exists"
 fi
 if [ ! -d $dataroot/climatology/CFSR ] ; then
   ln -s $CFSR_clim ${dataroot}/climatology
 else
-  echo "$dataroot/climatology/CFSR already exists"
+  echo "skipping $dataroot/climatology/CFSR already exists"
 fi
 if [ ! -d $dataroot/verf ] ; then
   ln -s $verf_data $dataroot
 else
-  echo "$dataroot/verf already exists"
+  echo "skipping $dataroot/verf already exists"
 fi
 if [ ! -d $dataroot/climatology/verf ] ; then
   ln -s $verf_clim ${dataroot}/climatology
 else
-  echo "$dataroot/climatology/verf already exists"
+  echo "skipping $dataroot/climatology/verf already exists"
 fi
 fi
 #############################################################################################################
@@ -135,7 +135,6 @@ fi
 # experiment parameters
 export sdate=2011040100
 export edate=2018031500
-export edate=2011041500
 
 export fout=24
 export hgrid=C384
