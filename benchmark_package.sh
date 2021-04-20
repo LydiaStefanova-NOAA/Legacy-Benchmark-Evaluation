@@ -3,7 +3,7 @@
 ##############################################################
 # User specific parameters
 
-module load intel
+module load intel/18.0.5.274
 
 
 for ARGUMENT in "$@"
@@ -11,30 +11,61 @@ do
     KEY=$(echo $ARGUMENT | cut -f1 -d=)
     VALUE=$(echo $ARGUMENT | cut -f2 -d=)
     case "$KEY" in
-            RUN_PREP)       RUN_PREP=${VALUE} ;;             
+            RUN_PREP)   RUN_PREP=${VALUE} ;;             
             proc_pgb)   proc_pgb=${VALUE} ;;             
             proc_flx)   proc_flx=${VALUE} ;;             
-            RUN_VERI)       RUN_VERI=${VALUE} ;;             
-            RUN_MJO)        RUN_MJO=${VALUE}  ;;             
-            RUN_PLOT)       RUN_PLOT=${VALUE} ;;             
+            RUN_VERI)   RUN_VERI=${VALUE} ;;             
+            RUN_MJO)    RUN_MJO=${VALUE}  ;;             
+            RUN_PLOT)   RUN_PLOT=${VALUE} ;;             
+            linkdata)   linkdata=${VALUE} ;;
             *)
     esac
 done
 
+
 export machine=hera
-export rootdir=/scratch1/NCEPDEV/stmp2/Lydia.B.Stefanova/BenchmarkPackage                       # root directory for the benchmark evaluation package (input)
-export dataroot=/scratch1/NCEPDEV/stmp2/Lydia.B.Stefanova/BenchmarkPackage/Obs_clim/validation  # path for post-processed data written in PREP step; link observation data there as well
-export outroot=/scratch1/NCEPDEV/stmp2/Lydia.B.Stefanova/BenchmarkPackage/results               # path for benchmark verification output 
-export logdir=$outroot/LOG                                                                      # location of log directory 
+export rootdir=$PWD                           # root directory for the benchmark evaluation package (input)
+export dataroot=$rootdir/Obs_clim/validation  # path for post-processed data written in PREP step; link observation data there as well
+export outroot=$rootdir/results               # path for benchmark verification output 
+export logdir=$outroot/LOG                    # location of log directory 
+
 export tmproot=/scratch1/NCEPDEV/global/Partha.Bhattacharjee/Veri_pkg/pgb                       # tmproot is only for MJO, which is not yet a functional part in this package
 export whereispgb=/scratch1/NCEPDEV/global/Partha.Bhattacharjee/Veri_pkg/pgb                    # path with prototype pgrb2 1x1 grib2 files
 export whereisflx=/scratch1/NCEPDEV/stmp2/Lydia.B.Stefanova/fromHPSS/ufs_p5                     # path with prototype sflux grib2 files
 
-##################################################################################
 export explist='UFSv5'
-##################################################################################
 
-#### make sure link_data.sh has been run for this exp ####################################################
+################################ link OBS data if run with argument linkdata=YES #####################################
+linkdata=${linkdata:-NO}
+if [ $linkdata == "YES" ] ; then
+export CFSR_data=/scratch1/NCEPDEV/global/Partha.Bhattacharjee/Veri_pkg/Obs_clim/validation/CFSR
+export CFSR_clim=/scratch1/NCEPDEV/global/Partha.Bhattacharjee/Veri_pkg/Obs_clim/validation/climatology/CFSR
+export verf_data=/scratch1/NCEPDEV/global/Partha.Bhattacharjee/Veri_pkg/Obs_clim/validation/verf
+export verf_clim=/scratch1/NCEPDEV/global/Partha.Bhattacharjee/Veri_pkg/Obs_clim/validation/climatology/verf
+echo "attempting to link obs data"
+if [ ! -d $dataroot/CFSR ] ; then
+  ln -s $CFSR_data $dataroot
+else
+  echo "$dataroot/CFSR already exists"
+fi
+if [ ! -d $dataroot/climatology/CFSR ] ; then
+  ln -s $CFSR_clim ${dataroot}/climatology
+else
+  echo "$dataroot/climatology/CFSR already exists"
+fi
+if [ ! -d $dataroot/verf ] ; then
+  ln -s $verf_data $dataroot
+else
+  echo "$dataroot/verf already exists"
+fi
+if [ ! -d $dataroot/climatology/verf ] ; then
+  ln -s $verf_clim ${dataroot}/climatology
+else
+  echo "$dataroot/climatology/verf already exists"
+fi
+fi
+#############################################################################################################
+
 export RUN_PREP=${RUN_PREP:-NO}                       # switch to run the data preparation
 export proc_pgb=${proc_pgb:-0}                        # 1: run pgb preparation, 0: do not run pgb preparation
 export proc_flx=${proc_flx:-0}                        # 1: run flx preparation, 0: do not run flx preparation
@@ -54,7 +85,7 @@ if [ $expnamesuffix -eq 3 ]; then
  pgm=readgau
 fi
 
-##############################################################
+#################################################################################################################
 
 ### DO NOT MODIFY BELOW UNLESS YOU KNOW WHAT YOU ARE DOING ###
 ## script directories
@@ -104,6 +135,7 @@ fi
 # experiment parameters
 export sdate=2011040100
 export edate=2018031500
+export edate=2011041500
 
 export fout=24
 export hgrid=C384
