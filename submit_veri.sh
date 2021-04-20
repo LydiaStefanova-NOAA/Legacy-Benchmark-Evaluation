@@ -8,11 +8,6 @@
 #SBATCH -o %x.o%j
 #SBATCH -D .
 
-#module load intel
-#module load impi/2020
-#module load hdf5
-#module load netcdf
-#module load contrib
 
 ulimit -s unlimited
 

@@ -172,7 +172,7 @@ if [ $RUN_PREP == "YES" ]; then
      echo "Running PREP: mkvar1x1_hera_lydia.sh for 1deg pgb data"
      logfile=$logdir/PREP.mkvar1x1.$expname.out
      > $logfile
-     ${PREPdir}/scripts/mkvar1x1_hera_lydia.sh $expname $sdate $edate $idir $odir > $logfile 2>&1
+     ${PREPdir}/scripts/mkvar1x1.sh $expname $sdate $edate $idir $odir > $logfile 2>&1
 
      varlist='z500 wnd200 wnd850'
      for var in $varlist ;  do
