@@ -1,6 +1,6 @@
 # Legacy-Benchmark-Evaluation
 
-Background
+## Background
 
 This package is used for verification the UFS prototype benchmark runs 
 (35-day runs, IC 1st/15th, April 2011-March 2018, for a total of 168 forecasts)
@@ -16,24 +16,26 @@ Anomaly correlations, Anomaly correlation scores, and rms are calculated separat
 
 The AC scores for a given domain and lead time are calculated by first adding all squared differences in space and time, rather than averaging the spatial correlations in time or the temporal correlation in space. 
 
-Contents
+## Contents
 
-Main package script: benchmark_package.sh
+### Main package script: 
+
+- benchmark_package.sh
 
 This script has three main stages: preparation, verification, and plotting. 
 The stages are run sequentially by specifying the values (YES or NO) of script arguments RUN_PREP, RUN_VERI and RUN_PLOT. 
 
-Scripts to set up and run 
+### Scripts to set up and run 
 
-initial_setup_hera.sh
-submit_prep_pgb.sh
-submit_prep_flx.sh
-submit_veri.sh
-submit_plot.sh
+- initial_setup_hera.sh
+- submit_prep_pgb.sh
+- submit_prep_flx.sh
+- submit_veri.sh
+- submit_plot.sh
 
-3. Source code and scripts
+### Source code and scripts
 
-PREP
-VERI
-PLOT
+- PREP
+- VERI
+- PLOT
 
