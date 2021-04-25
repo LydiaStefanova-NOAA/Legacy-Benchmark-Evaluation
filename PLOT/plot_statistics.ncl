@@ -61,7 +61,7 @@ do r=0,dimsizes(REGION)-1
   ; daily dieoff curve AC
   DATA_DIE_H_SIZE    = dimsizes(DATA_DIE_H)
   lead               = rm_single_dims(DATA_DIE_H(:,4))
-  plot_data_tmp      = new((/4,DATA_DIE_H_SIZE(0)/),"float")
+  plot_data_tmp      = new((/2,DATA_DIE_H_SIZE(0)/),"float")
   plot_data_tmp@_FillValue = -999.
   plot_data_tmp(0,:) = DATA_DIE_H(:,3)
   plot_data_tmp(1,:) = DATA_DIE_H(:,8)
@@ -86,7 +86,8 @@ do r=0,dimsizes(REGION)-1
   res@lgLabelFontHeightF     = .01                 ; label font height
   res@pmLegendWidthF         = 0.10                ; Change width and
   res@pmLegendHeightF        = 0.075                ; height of legend.
-  res@xyExplicitLegendLabels = (/"UFSv1-raw","UFSv1-sec","UFSv2-raw","UFSv2-sec","UFSv3-raw","UFSv3-sec"/)         ; create explicit labels
+  ;res@xyExplicitLegendLabels = (/"UFSv1-raw","UFSv1-sec","UFSv2-raw","UFSv2-sec","UFSv3-raw","UFSv3-sec"/)         ; create explicit labels
+  res@xyExplicitLegendLabels = (/"UFSv5-raw","UFSv5-sec"/)         ; create explicit labels
 
   res@trYMinF = 0.0
   res@trYMaxF = 100.0
@@ -103,7 +104,7 @@ do r=0,dimsizes(REGION)-1
   ; daily dieoff curve RMSE
   DATA_DIE_H_SIZE    = dimsizes(DATA_DIE_H)
   lead               = rm_single_dims(DATA_DIE_H(:,4))
-  plot_data_tmp      = new((/4,DATA_DIE_H_SIZE(0)/),"float")
+  plot_data_tmp      = new((/2,DATA_DIE_H_SIZE(0)/),"float")
   plot_data_tmp(0,:) = DATA_DIE_H(:,0)
   plot_data_tmp(1,:) = DATA_DIE_H(:,5)
   replace_ieeenan(plot_data_tmp,plot_data_tmp@_FillValue,0)

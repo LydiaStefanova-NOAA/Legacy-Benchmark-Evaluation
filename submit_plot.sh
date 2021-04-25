@@ -4,7 +4,7 @@
 #SBATCH --exclusive
 #SBATCH -q debug
 #SBATCH -t 30
-#SBATCH -J test_veri
+#SBATCH -J test_plot
 #SBATCH -o %x.o%j
 #SBATCH -D .
 

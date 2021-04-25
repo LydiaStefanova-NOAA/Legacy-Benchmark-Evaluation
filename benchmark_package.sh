@@ -4,6 +4,7 @@
 # User specific parameters
 
 module load intel/18.0.5.274
+module load ncl
 
 
 for ARGUMENT in "$@"
@@ -259,7 +260,6 @@ fi
 if [ $RUN_VERI == "YES" ]; then
 echo "Running VERI"
 
-#export varlist='CPCRAIN CPCTEMP pot z500 u200 u850 TMPsfc PRATEsfc TMP2m TMIN TMAX ULWRFtoa dt20c icec icetk sshg'
 export varlist='CPCRAIN CPCTEMP z500 TMPsfc PRATEsfc TMP2m'
 
 idir=$dataroot                       # input location of data prepared in PREP step, and of obs
@@ -301,21 +301,6 @@ for expname in ${explist[@]}; do
       logfile=$logdir/VERI.read1x1.$expname.$varname.out
       > $logfile
       ${VERIdir}/scripts/read1x1.sh $sdate $edate $expname $varname $VERIdir $odir $idir $expnamesuffix > $logfile 2>&1
-
-#    elif [ $varname == "dt20c" ] || [ $varname == "icec" ] \
-#      || [ $varname == "icetk" ] || [ $varname == "sshg" ] ; then
-#      run verification for 1deg ocean data against CFSR
-#      echo "Running VERI: readocn.sh"
-#      logfile=$logdir/VERI.readocn.$expname.$varname.out
-#      > $logfile
-#      ${VERIdir}/scripts/readocn.sh $sdate $edate $expname $varname $VERIdir $odir $idir $expnamesuffix > $logfile 2>&1
-#
-#    elif [ $varname == "pot" ]; then
-#      run verification for 1deg ocean potential temp data against CFSR
-#      echo "Running VERI: readpot.sh"
-#      logfile=$logdir/VERI.readpot.$expname.$varname.out
-#      > $logfile
-#      ${VERIdir}/scripts/readpot.sh $sdate $edate $expname $varname $VERIdir $odir $idir $expnamesuffix > $logfile 2>&1
 
     else
 
@@ -369,9 +354,7 @@ if [ $RUN_PLOT == "YES" ]; then
 # Plot statistics
 echo "Plotting statistics"
 
-export varlist='CPCRAIN CPCTEMP TMPsfc PRATEsfc z500 TMP2m' #ULWRFtoa TMIN TMAX wnd200 wnd850
-#export varlist='CPCRAIN CPCTEMP TMPsfc PRATEsfc z500 TMP2m' 
-#export varlist='CPCRAIN CPCTEMP PRATEsfc TMP2m' 
+export varlist='CPCRAIN CPCTEMP TMPsfc PRATEsfc z500 TMP2m'
 
 idir=$outroot
 PLOT_AC_MAPS=YES
