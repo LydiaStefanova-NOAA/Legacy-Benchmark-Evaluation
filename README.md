@@ -18,20 +18,29 @@ The AC scores for a given domain and lead time are calculated by first adding al
 
 ## Contents
 
-### Main package script: 
+### Main package script 
 
 - benchmark_package.sh
 
 This script has three main stages: preparation, verification, and plotting. 
 The stages are run sequentially by specifying the values (YES or NO) of script arguments RUN_PREP, RUN_VERI and RUN_PLOT. 
 
-### Scripts to set up and run 
+Before running, specify: 
 
-- initial_setup_hera.sh
-- submit_prep_pgb.sh
-- submit_prep_flx.sh
-- submit_veri.sh
-- submit_plot.sh
+**rootdir=$PWD**   *Root path for directories (PREP, VERI, PLOT) containing scripts and executables*    
+**dataroot=$rootdir/Obs_clim/validation**   *Path to where the preprocessed data will be written by PREP step*   
+**outroot=$rootdir/results**  *Path for output from VERI and PLOT steps*   
+**whereispgb**  *Path to pgb2b files*    
+**whereisflx**  *Path to sflux files*   
+**explist**     *Name for the experiment set*   
+
+### Scripts to execute the main (initialize and run benchmark_package.sh) 
+
+- initial_setup_hera.sh: compile executables and link verification data
+- submit_prep_pgb.sh: preprocess data from 1x1 pgb2b files
+- submit_prep_flx.sh: preprocess data from C384 sfluxgrb files
+- submit_veri.sh: calculate AC and AC scores, write out results
+- submit_plot.sh: plot
 
 ### Source code and scripts
 
