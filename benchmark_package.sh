@@ -12,13 +12,16 @@ do
     KEY=$(echo $ARGUMENT | cut -f1 -d=)
     VALUE=$(echo $ARGUMENT | cut -f2 -d=)
     case "$KEY" in
-            RUN_PREP)   RUN_PREP=${VALUE} ;;             
-            proc_pgb)   proc_pgb=${VALUE} ;;             
-            proc_flx)   proc_flx=${VALUE} ;;             
-            RUN_VERI)   RUN_VERI=${VALUE} ;;             
-            RUN_MJO)    RUN_MJO=${VALUE}  ;;             
-            RUN_PLOT)   RUN_PLOT=${VALUE} ;;             
-            linkdata)   linkdata=${VALUE} ;;
+            linkdata)        linkdata=${VALUE} ;;
+            RUN_PREP)        RUN_PREP=${VALUE} ;;             
+            prep_pgb)        prep_pgb=${VALUE} ;;             
+            prep_flx)        prep_flx=${VALUE} ;;             
+            RUN_VERI)        RUN_VERI=${VALUE} ;;             
+            RUN_MJO)         RUN_MJO=${VALUE}  ;;             
+            RUN_PLOT)        RUN_PLOT=${VALUE} ;;             
+            plot_ac_maps)    plot_ac_maps=${VALUE} ;;
+            plot_ac_stats)   plot_ac_stats=${VALUE} ;;
+            plot_mjo)        plot_mjo=${VALUE} ;;
             *)
     esac
 done
@@ -68,8 +71,8 @@ fi
 #############################################################################################################
 
 export RUN_PREP=${RUN_PREP:-NO}                       # switch to run the data preparation
-export proc_pgb=${proc_pgb:-0}                        # 1: run pgb preparation, 0: do not run pgb preparation
-export proc_flx=${proc_flx:-0}                        # 1: run flx preparation, 0: do not run flx preparation
+export prep_pgb=${prep_pgb:-0}                        # 1: run pgb preparation, 0: do not run pgb preparation
+export prep_flx=${prep_flx:-0}                        # 1: run flx preparation, 0: do not run flx preparation
 export RUN_VERI=${RUN_VERI:-NO}                       # switch to run the verification  
 export RUN_MJO=${RUN_MJO:-NO}                         # switch to run the MJO program
 export RUN_PLOT=${RUN_PLOT:-NO}                       # switch to turn on/off plots
@@ -164,7 +167,7 @@ if [ $RUN_PREP == "YES" ]; then
    cdir=$dataroot/climatology/$expname
 
 ########################################## pgb data processing section #################
-    if [ $proc_pgb -eq 1 ] ; then
+    if [ $prep_pgb -eq 1 ] ; then
 
      idir=$whereispgb
      igau=0      # grid is not Gaussian
@@ -195,7 +198,7 @@ if [ $RUN_PREP == "YES" ]; then
 
     fi
 ########################################## flx data processing section #################
-    if [ $proc_flx -eq 1 ] ; then
+    if [ $prep_flx -eq 1 ] ; then
 
      idir=$whereisflx
      igau=1  # grid is Gaussian
@@ -351,15 +354,16 @@ fi
 
 
 if [ $RUN_PLOT == "YES" ]; then
+PLOT_AC_MAPS=${plot_ac_maps:-"NO"}
+PLOT_AC_STATS=${plot_ac_stats:-"NO"}
+PLOT_MJO=${plot_mjo:-"NO"}
+
 # Plot statistics
 echo "Plotting statistics"
 
 export varlist='CPCRAIN CPCTEMP TMPsfc PRATEsfc z500 TMP2m'
 
 idir=$outroot
-PLOT_AC_MAPS=YES
-PLOT_AC_STATS=YES 
-PLOT_MJO=NO
 
 cd $PLOTdir
 

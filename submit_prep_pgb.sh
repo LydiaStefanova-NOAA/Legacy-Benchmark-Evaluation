@@ -6,7 +6,7 @@
 #SBATCH -t 8:00:00
 ##SBATCH -q debug
 ##SBATCH -t 30
-#SBATCH -J test_proc_pgb
+#SBATCH -J test_prep_pgb
 #SBATCH -o %x.o%j
 #SBATCH -D .
 
@@ -14,5 +14,5 @@ ulimit -s unlimited
 
 set -x
 date
-bash benchmark_package.sh RUN_PREP=YES proc_pgb=1 proc_flx=0 RUN_VERI=NO RUN_MJO=NO RUN_PLOT=NO 
+bash benchmark_package.sh RUN_PREP=YES prep_pgb=1 prep_flx=0 RUN_VERI=NO RUN_MJO=NO RUN_PLOT=NO 
 date
