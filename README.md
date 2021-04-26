@@ -27,10 +27,10 @@ Surface variables are evaluated on T126 grid, upper air variables are evaluated 
 This script has three main stages: preparation, verification, and plotting. 
 The stages are run sequentially by specifying the values (YES or NO) of script arguments RUN_PREP, RUN_VERI and RUN_PLOT. In this script, 
 
-**rootdir=$PWD**   *Root path for directories (PREP, VERI, PLOT) containing scripts and executables*    
+**rootdir=$PWD**   *Root path for directories (PREP, VERI, PLOT) containing scripts and code*    
 **dataroot=$rootdir/Obs_clim/validation**   *Path to where the preprocessed data will be written by PREP step. Also path to where the verifying data and climatology will be linked to. See NOTES below*   
 **outroot=$rootdir/results**  *Path for output from VERI and PLOT steps*   
-**whereispgb**  *Path to pgb2b files. Expected structure is $whereispgb/gfs.YYYYMMDD/00/gfs.t00z.pgrb2.1p00.fHHH*
+**whereispgb**  *Path to 1x1 pgb2b files. Expected structure is $whereispgb/gfs.YYYYMMDD/00/gfs.t00z.pgrb2.1p00.fHHH*
 **whereisflx**  *Path to sflux files. Expected structure is $whereisflx/gfs.YYYYMMDD/00/gfs.t00z.sfluxgrbfHHH.grib2*   
 **explist**     *Name for the experiment set*   
 
@@ -38,7 +38,7 @@ The stages are run sequentially by specifying the values (YES or NO) of script a
 
 - initial_setup_hera.sh: *Compile executables and link verification data*  
 - submit_prep_pgb.sh: *Preprocess data from 1x1 pgb2b files*  
-- submit_prep_flx.sh: *Preprocess data from C384 sflux files*  
+- submit_prep_flx.sh: *Preprocess data from sflux files*  
 - submit_veri.sh: *Calculate AC and AC scores, write out results*  
 - submit_plot.sh: *Plot*  
 
@@ -46,7 +46,7 @@ The preprocessing stage must be completed before the verification step is run; a
 
 ### Source code and scripts
 
-- PREP: *Bash scripts and fortran code associated with preprocessing. Most of this is file manipulation (conversion of grib2 to grib1, going from 6 hourly to daily, etc. This is also where is where the smoothed climatology is calculated.*
+- PREP: *Bash scripts and fortran code associated with preprocessing. Most of this is file manipulation (variable extraction, conversion of grib2 to grib1, etc). This is also the step in which the smoothed climatology is calculated.*
 - VERI: *Bash scripts and fortran code for calculation of AC and RMS*
 - PLOT: *Bash scripts and ncl code for plots*
 
