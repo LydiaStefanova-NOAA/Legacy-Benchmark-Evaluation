@@ -87,7 +87,7 @@ do r=0,dimsizes(REGION)-1
   res@pmLegendWidthF         = 0.10                ; Change width and
   res@pmLegendHeightF        = 0.075                ; height of legend.
   ;res@xyExplicitLegendLabels = (/"UFSv1-raw","UFSv1-sec","UFSv2-raw","UFSv2-sec","UFSv3-raw","UFSv3-sec"/)         ; create explicit labels
-  res@xyExplicitLegendLabels = (/"UFSv5-raw","UFSv5-sec"/)         ; create explicit labels
+  res@xyExplicitLegendLabels = (/EXPNAME+"-raw",EXPNAME+"-sec"/)         ; create explicit labels
 
   res@trYMinF = 0.0
   res@trYMaxF = 100.0
@@ -129,7 +129,7 @@ do r=0,dimsizes(REGION)-1
   res@lgLabelFontHeightF     = .01                 ; label font height
   res@pmLegendWidthF         = 0.10                ; Change width and
   res@pmLegendHeightF        = 0.075                ; height of legend.
-  res@xyExplicitLegendLabels = (/"UFSv5-raw","UFSv5-sec"/)         ; create explicit labels
+  res@xyExplicitLegendLabels = (/EXPNAME+"-raw",EXPNAME+"-sec"/)         ; create explicit labels
 
   res@trYMinF = 0.0
   ;res@trYMaxF = max(plot_data_tmp)
