@@ -12,7 +12,7 @@ The smoothed climatology is defined separately for each variable, grid point, an
 
 Anomaly correlation maps and ac/rms dieoff curves are calculated for both RAW and SEC (systematic error-corrected) anomalies: 
 "RAW" anomalies are calculated relative to the observed (or CFSR) smoothed climatology, while 
-"SEC" anomalies are calculated relative to the smoothed climatology of the model sample. 
+"SEC" anomalies are calculated relative to the smoothed climatology of the model sample (for a given lead time). 
 
 For the dieoff curves, for a given domain and lead time, anomaly correlations are calculated by  adding all squared differences in both space and time, rather than averaging the spatial correlations in time or the temporal correlation in space. 
 
