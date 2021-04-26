@@ -50,18 +50,23 @@ The preprocessing stage must be completed before the verification step is run; a
 - VERI: *Bash scripts and fortran code for calculation of AC and RMS*
 - PLOT: *Bash scripts and ncl code for plots*
 
-## STEPS TO RUN the package
+## STEPS TO RUN the package, in order
 1. Edit benchmark_package.sh. If running in the directory with the script, all that needs to be changed is to specify correct values for:
 > export whereispgb=...   
 > export whereisflx=...   
 > export explist=...    
+
 2. Initialize    
 > bash initial_setup_hera.sh  
-3. Run preprocessing 
+
+3. Run preprocessing (the two jobs are independent and can be submitted at the same time)
 > sbatch submit_prep_pgb.sh  
 > sbatch submit_prep_flx.sh  
-4. Run verification  
+**Wait for both jobs to finish before moving on to the next step**
+
+4. Run verification calculations
 > sbatch submit_veri.sh
+
 5. Plot results
 > sbatch submit_plot.sh
 
