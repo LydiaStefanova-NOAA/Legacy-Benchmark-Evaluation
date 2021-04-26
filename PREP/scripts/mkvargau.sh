@@ -95,6 +95,9 @@ varlist='TMPsfc TMP2m PRATEsfc ULWRFtoa TMIN TMAX'
      fi
 
      ifile=$idir/gfs.t${hh}z.sfluxgrbf$FH.grib2
+     if [ ! -f $ifile ] ; then
+       ifile=$idir/atmos/gfs.t${hh}z.sfluxgrbf$FH.grib2
+     fi
      if [[ -s $ifile ]] ; then
       ls -l $ifile
 
@@ -150,8 +153,8 @@ varlist='TMPsfc TMP2m PRATEsfc ULWRFtoa TMIN TMAX'
    fi
 
 ##  CDATE=`/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate $fout $CDATE`
-#     CDATE=`/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/prod_util.v1.1.0/exec/ndate $fout $CDATE`
-     CDATE=`$ndate $fout $CDATE`
+##  CDATE=`/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/prod_util.v1.1.0/exec/ndate $fout $CDATE`
+    CDATE=`$ndate $fout $CDATE`
   done
 
 echo "I am DONE in mkvargau for $yyyy"

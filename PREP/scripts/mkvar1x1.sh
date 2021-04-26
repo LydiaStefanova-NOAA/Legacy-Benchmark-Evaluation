@@ -59,6 +59,9 @@ varlist='z500 wnd200 wnd850'
      fi
 
      ifile=$idir/gfs.t${hh}z.pgrb2.1p00.f$FH
+     if [ ! -f $ifile ] ; then
+       ifile=$idir/atmos/gfs.t${hh}z.pgrb2.1p00.f$FH
+     fi
 
      if [[ -s $ifile ]] ; then
       ls -l $ifile
