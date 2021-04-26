@@ -52,15 +52,15 @@ The preprocessing stage must be completed before the verification step is run; a
 
 ## STEPS TO RUN the package
 1. Edit benchmark_package.sh. If running in the directory with the script, all that needs to be changed is to specify correct values for:
-> export whereispgb=... 
-> export whereisflx=... 
-> export explist=...  
-2. Initialize  
+> export whereispgb=...   
+> export whereisflx=...   
+> export explist=...    
+2. Initialize    
 > bash initial_setup_hera.sh  
-3. Run preprocessing: 
+3. Run preprocessing 
 > sbatch submit_prep_pgb.sh  
 > sbatch submit_prep_flx.sh  
-4. Run verification: 
+4. Run verification  
 > sbatch submit_veri.sh
 5. Plot results
 > sbatch submit_plot.sh
