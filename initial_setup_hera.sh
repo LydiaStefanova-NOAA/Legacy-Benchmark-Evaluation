@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rootdir=$PWD
+rootdir=$PWD    # NB: make sure this matches $rootdir in benchmark_package.sh
 remake=YES
 
 module load intel/18.0.5.274
