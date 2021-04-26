@@ -46,9 +46,9 @@ The preprocessing stage must be completed before the verification step is run; a
 
 ### Source code and scripts
 
-- PREP: *Scripts and code associated with preprocessing. Most of this is file manipulation (conversion of grib2 to grib1, going from 6 hourly to daily, etc. This is also where is where the smoothed climatology is calculated.*
-- VERI: *Perform calculations for AC and RMS*
-- PLOT: *Produce plots*
+- PREP: *Bash scripts and fortran code associated with preprocessing. Most of this is file manipulation (conversion of grib2 to grib1, going from 6 hourly to daily, etc. This is also where is where the smoothed climatology is calculated.*
+- VERI: *Bash scripts and fortran code for calculation of AC and RMS*
+- PLOT: *Bash scripts and ncl code for plots*
 
 ## NOTES
 
