@@ -14,5 +14,5 @@ ulimit -s unlimited
 
 set -x
 date
-bash benchmark_package.sh RUN_PREP=YES prep_pgb=1 prep_flx=0 RUN_VERI=NO RUN_MJO=NO RUN_PLOT=NO 
+bash benchmark_package.sh RUN_PREP=YES prep_pgb=1 prep_flx=0  
 date
