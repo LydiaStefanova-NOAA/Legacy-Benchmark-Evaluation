@@ -47,6 +47,7 @@ export CFSR_clim=/scratch1/NCEPDEV/global/Partha.Bhattacharjee/Veri_pkg/Obs_clim
 export verf_data=/scratch1/NCEPDEV/global/Partha.Bhattacharjee/Veri_pkg/Obs_clim/validation/verf
 export verf_clim=/scratch1/NCEPDEV/global/Partha.Bhattacharjee/Veri_pkg/Obs_clim/validation/climatology/verf
 echo "linking obs data"
+mkdir -p $dataroot/climatology
 if [ ! -d $dataroot/CFSR ] ; then
   ln -s $CFSR_data $dataroot
 else
