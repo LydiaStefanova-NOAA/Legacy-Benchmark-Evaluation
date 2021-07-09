@@ -8,7 +8,7 @@ This package is used for verification the UFS prototype benchmark runs
 The package produces anomaly correlation maps and daily/weekly AC score/rms as a function of domain and lead time. 
 
 Anomalies are calculated relative to a smoothed climatology climatology. 
-The smoothed climatology is defined separately for each variable, grid point, and lead time. It is calculated by a Fourier decomposition of the 168-element time series, and retaining the mean and first four harmonics. The smoothed verifying climatology has been precalculated using the same approach.
+The smoothed climatology is defined separately for each variable, grid point, and lead time. It is calculated by a Fourier decomposition of the 168-element time series, and retaining the mean and first four harmonics. The smoothed verifying climatology has been precalculated using the same approach. (The fortran code that calculates the smoothed climatology is mkclimn.f, calling some subroutines from miscng.f)
 
 Anomaly correlation maps and ac/rms dieoff curves are calculated for both RAW and SEC (systematic error-corrected) anomalies: 
 "RAW" anomalies are calculated relative to the observed (or CFSR) smoothed climatology, while 
